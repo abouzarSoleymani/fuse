@@ -8,6 +8,8 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import {MatAccordion} from '@angular/material';
+import {ResponseApiModel} from 'app/model/responseApi.model';
+import {LocalStorageService} from 'app/core/service/local-storage.service';
 
 @Component({
     selector     : 'navbar-vertical-style-1',
@@ -23,6 +25,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
     // Private
     private _fusePerfectScrollbar: FusePerfectScrollbarDirective;
     private _unsubscribeAll: Subject<any>;
+    user: ResponseApiModel<any>
 
     /**
      * Constructor
@@ -36,7 +39,8 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
         private _fuseConfigService: FuseConfigService,
         private _fuseNavigationService: FuseNavigationService,
         private _fuseSidebarService: FuseSidebarService,
-        private _router: Router
+        private _router: Router,
+        private localStorage: LocalStorageService
     )
     {
         // Set the private defaults
@@ -129,6 +133,9 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
             .subscribe(() => {
                 this.navigation = this._fuseNavigationService.getCurrentNavigation();
             });
+
+        this.user = this.localStorage.getItem('user');
+
     }
 
     /**
@@ -158,6 +165,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
      */
     toggleSidebarFolded(): void
     {
+        console.log(this._fuseSidebarService.getSidebar('navbar'))
         this._fuseSidebarService.getSidebar('navbar').toggleFold();
     }
 }

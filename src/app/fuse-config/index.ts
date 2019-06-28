@@ -37,7 +37,7 @@ export const fuseConfig: FuseConfig = {
         },
         sidepanel: {
             hidden  : true,
-            position: 'left'
+            position: 'right'
         }
     }
 };

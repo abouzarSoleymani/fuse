@@ -356,7 +356,7 @@ $carded-header-height-without-toolbar: $carded-header-height - $carded-toolbar-h
                     min-width: 0;
 
                     @include media-breakpoint('lt-lg') {
-                        width: calc(100% - 64px);
+                     //   width: calc(100% - 64px);
                     }
 
                     > .header {

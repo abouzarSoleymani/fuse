@@ -1,0 +1,22 @@
+@mixin verify-code-theme($theme) {
+
+    $background: map-get($theme, background);
+    $is-dark: map-get($theme, is-dark);
+
+    verify-code {
+
+        #verify-code {
+
+            #verify-code-form-wrapper {
+
+                #verify-code-form {
+                    @if ($is-dark) {
+                        background: mat-color($fuse-navy, 600);
+                    } @else {
+                        background: map-get($background, card);
+                    }
+                }
+            }
+        }
+    }
+}

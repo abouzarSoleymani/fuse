@@ -41,7 +41,7 @@
 // -----------------------------------------------------------------------------------------------------
 html {
     font-size: 62.5%;
-    font-family: 'Muli', 'Helvetica Neue', 'Arial', sans-serif;
+    font-family: 'iranSans', 'Helvetica Neue', 'Arial', sans-serif;
     line-height: 1.4 !important;
     letter-spacing: -0.1px !important;
 }
@@ -54,7 +54,9 @@ html, body {
     -webkit-font-smoothing: auto;
     -moz-osx-font-smoothing: auto;
 }
-
+/*html:lang(fa){
+    text-align: right;
+}*/
 // Headings
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -87,12 +89,12 @@ h6, .h6 {
 
 // Links
 a {
-    text-decoration: none;
+   // text-decoration: none;
 
     &:not(.mat-button):not(.mat-raised-button):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button):not(.mat-fab):not(.mat-mini-fab) {
 
         &:hover, &:active {
-            text-decoration: underline;
+          //  text-decoration: underline;
         }
     }
 }

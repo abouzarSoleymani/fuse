@@ -1,0 +1,22 @@
+<div id="map" class="page-layout blank">
+    <div class="content">
+        <div style="     position: absolute;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    outline: none;
+    right: 0;
+    top: 0;"
+             leaflet
+             *ngIf="isOnBrowser"
+             [leafletOptions]="options"
+             (leafletMapReady)="onMapReady($event)"
+             [leafletLayers]="markers"
+             [(leafletCenter)]="mapCenter"
+             [leafletZoomOptions]="mapZoom"
+             (leafletClick) = 'leafletClick($event)'>
+        </div>
+
+    </div>
+
+</div>

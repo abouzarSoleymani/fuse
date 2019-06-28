@@ -8,6 +8,12 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 
 import { navigation } from 'app/navigation/navigation';
+import {Router} from '@angular/router';
+import {Login, Logout} from 'app/modules/authentication/auth.actions';
+import {LocalStorageService} from 'app/core/service/local-storage.service';
+import {Store} from '@ngrx/store';
+import {AppState} from 'app/reducers';
+import {ResponseApiModel} from 'app/model/responseApi.model';
 
 @Component({
     selector     : 'toolbar',
@@ -25,7 +31,7 @@ export class ToolbarComponent implements OnInit, OnDestroy
     navigation: any;
     selectedLanguage: any;
     userStatusOptions: any[];
-
+    user: ResponseApiModel<any>;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -39,7 +45,10 @@ export class ToolbarComponent implements OnInit, OnDestroy
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _fuseSidebarService: FuseSidebarService,
-        private _translateService: TranslateService
+        private _translateService: TranslateService,
+        private router: Router,
+        private store: Store<AppState>,
+        private localStorage: LocalStorageService
     )
     {
         // Set the defaults
@@ -78,9 +87,9 @@ export class ToolbarComponent implements OnInit, OnDestroy
                 flag : 'us'
             },
             {
-                id   : 'tr',
-                title: 'Turkish',
-                flag : 'tr'
+                id   : 'fa',
+                title: 'persian',
+                flag : 'fa'
             }
         ];
 
@@ -107,9 +116,9 @@ export class ToolbarComponent implements OnInit, OnDestroy
                 this.rightNavbar = settings.layout.navbar.position === 'right';
                 this.hiddenNavbar = settings.layout.navbar.hidden === true;
             });
-
         // Set the selected language from default languages
         this.selectedLanguage = _.find(this.languages, {'id': this._translateService.currentLang});
+        this.user = this.localStorage.getItem('user');
     }
 
     /**
@@ -156,8 +165,10 @@ export class ToolbarComponent implements OnInit, OnDestroy
     {
         // Set the selected language for the toolbar
         this.selectedLanguage = lang;
-
         // Use the selected language for translations
         this._translateService.use(lang.id);
+    }
+    logout(): void {
+        this.store.dispatch(new Logout());
     }
 }

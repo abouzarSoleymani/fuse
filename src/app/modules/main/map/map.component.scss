@@ -1,0 +1,30 @@
+@import "src/@fuse/scss/fuse";
+@import '~leaflet/dist/leaflet.css';
+
+#map {
+    .content {
+        display: flex;
+        flex: 1 1 auto;
+        padding: 32px;
+        min-width: 0;
+        @include media-breakpoint('lt-lg') {
+            flex-direction: column;
+        }
+
+    }
+
+}
+
+ .my-pin{
+    width: 30px !important;
+    height: 30px !important;
+}
+ .leaflet-control-zoom.leaflet-bar.leaflet-control {
+    margin-top: 80px;
+}
+ .leaflet-control-layers-expanded{
+    padding: 0px;
+}
+ div#my-location {
+    margin-bottom: 50px;
+}

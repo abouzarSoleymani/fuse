@@ -107,7 +107,7 @@ export class FuseSidebarComponent implements OnInit, OnDestroy
         this.foldedChanged = new EventEmitter();
         this.openedChanged = new EventEmitter();
         this.opened = false;
-        this.position = 'left';
+        this.position = 'right';   ///RTL-CHANGE
         this.invisibleOverlay = false;
 
         // Set the private defaults

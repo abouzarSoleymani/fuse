@@ -13,21 +13,20 @@
         </button>
 
     </div>
-
     <div class="logo">
-        <img class="logo-icon" src="assets/images/logos/fuse.svg">
-        <span class="logo-text secondary-text">FUSE</span>
+        <span class="logo-text secondary-text">MAINE</span>
+        <img class="logo-icon" src="assets/images/logos/logo.png">
     </div>
+
 </div>
 
 
 <div class="navbar-scroll-container" [ngClass]="fuseConfig.layout.navbar.primaryBackground"
      fusePerfectScrollbar [fusePerfectScrollbarOptions]="{suppressScrollX: true}">
 
-    <div class="user" fxLayout="column" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
-
-        <div class="h3 username">Charlie Adams</div>
-        <div class="h5 email hint-text mt-8">adams.charlie@mail.com</div>
+    <div class="user" fxLayout="column" [ngClass]="fuseConfig.layout.navbar.secondaryBackground" *ngIf="user?.data">
+        <div class="h3 username">{{user?.data[0]?.vFullName}}</div>
+        <div class="h5 email hint-text mt-8">{{user?.data[0]?.vMobileNumber}}</div>
         <div class="avatar-container" [ngClass]="fuseConfig.layout.navbar.primaryBackground">
             <img class="avatar" src="assets/images/avatars/Velazquez.jpg">
         </div>

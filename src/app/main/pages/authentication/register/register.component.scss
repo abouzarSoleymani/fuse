@@ -48,13 +48,17 @@ register {
                     mat-checkbox {
                         margin: 0;
                     }
-
+                    .mat-checkbox-inner-container{
+                        margin-right: 0px;
+                        margin-left: 8px;
+                    }
                     .terms {
                         margin: 16px 0 32px 0;
 
                         a {
                             font-size: 16px;
-                            margin-left: 4px;
+                           // margin-left: 4px;  ///RTL-CHANGE
+                            margin-right: 4px;
                         }
                     }
 

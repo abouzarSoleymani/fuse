@@ -4,7 +4,9 @@
 
 export const environment = {
     production: false,
-    hmr       : false
+    hmr       : false,
+    i18nPrefix: '',
+    apiBaseUrl: 'https://minetaxi.ir:4752/api/v1/'
 };
 
 /*

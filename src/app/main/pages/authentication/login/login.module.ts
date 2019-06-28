@@ -5,6 +5,7 @@ import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, 
 import { FuseSharedModule } from '@fuse/shared.module';
 
 import { LoginComponent } from 'app/main/pages/authentication/login/login.component';
+import {SharedModule} from 'app/shared/shared.module';
 
 const routes = [
     {
@@ -26,7 +27,8 @@ const routes = [
         MatIconModule,
         MatInputModule,
 
-        FuseSharedModule
+        FuseSharedModule ,
+        SharedModule
     ]
 })
 export class LoginModule

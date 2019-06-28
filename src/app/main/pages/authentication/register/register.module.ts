@@ -5,6 +5,7 @@ import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, 
 import { FuseSharedModule } from '@fuse/shared.module';
 
 import { RegisterComponent } from 'app/main/pages/authentication/register/register.component';
+import {SharedModule} from 'app/shared/shared.module';
 
 const routes = [
     {
@@ -25,7 +26,7 @@ const routes = [
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
-
+        SharedModule,
         FuseSharedModule
     ]
 })

@@ -3,7 +3,7 @@
         <div style="     position: absolute;
     left: 0px;
     height: 100%;
-    width: 100%;
+    width: 100vw;
     outline: none;
     right: 0;
     top: 0;"
@@ -14,7 +14,10 @@
              [leafletLayers]="markers"
              [(leafletCenter)]="mapCenter"
              [leafletZoomOptions]="mapZoom"
-             (leafletClick) = 'leafletClick($event)'>
+            >
+<!--
+            (leafletClick) = 'leafletClick($event)'
+-->
         </div>
 
     </div>

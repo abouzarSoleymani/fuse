@@ -1,20 +1,64 @@
-<mat-toolbar>
+<mat-toolbar style="height:auto">
+    <div fxLayout="column"  fxFlex fxFlexFill >
 
+        <div fxLayout="row"  class="slider-vehicles" >
+            <swiper  class="swiper-container" fxFlex="auto" [config]="config" [disabled]="disabled">
+                <div *ngFor="let slide of slides" class="swiper-slide">
+                    <div fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
+                        <div class="service-type cursor-hand">
+                            <img src="{{slide.image}}">
+                            <div class="description-active">
+                                {{slide.title}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </swiper>
+        </div>
+        <div fxLayout="row"  class="ride-options" fxLayoutAlign="space-between stretch"  >
+
+            <div  class="cursor-hand" fxLayoutAlign="center center" fxFlex="grow" >
+                کد تخفیف
+            </div>
+            <div class="ride-price " fxLayoutAlign="center center"  fxFlex="grow"  >
+                  ۱۱۰۰۰ ریال
+            </div>
+            <div  class="cursor-hand" fxLayoutAlign="center center"  fxFlex="grow">
+              گزینه ها
+            </div>
+        </div>
+        <div fxLayout="row"  class="request-taxi" fxLayoutAlign="center stretch"  >
+            <div  class="request-center-btn accent cursor-hand" fxLayoutAlign="center stretch" fxFlex="40" >
+               درخواست تاکسی
+            </div>
+        </div>
+    </div>
+
+
+<!--
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutAlign.gt-xs="space-between center" fxFlex>
+-->
 
-        <a href="https://1.envato.market/c/1257954/275988/4415?u=https%3A%2F%2Fthemeforest.net%2Fitem%2Ffuse-angularjs-material-design-admin-template%2F12931855"
+<!--        <a href="https://1.envato.market/c/1257954/275988/4415?u=https%3A%2F%2Fthemeforest.net%2Fitem%2Ffuse-angularjs-material-design-admin-template%2F12931855"
            target="_blank" mat-button class="pink" fxFlex="0 0 auto" fxLayout="row"
            fxLayoutAlign="start center">
-  <!--          <mat-icon class="s-16 mr-sm-4">shopping_cart</mat-icon>
-            <span>Purchase FUSE (Angular 7+)</span>-->
-        </a>
+            <mat-icon class="s-16 mr-sm-4">shopping_cart</mat-icon>
+            <span>Purchase FUSE (Angular 7+)</span>
+        </a>-->
 
+<!--
         <div fxLayout="row" fxLayoutAlign="start center" fxHide fxShow.gt-xs>
-<!--            <a mat-button routerLink="/documentation/getting-started/introduction">Documentation</a>
+-->
+           <!-- <a mat-button routerLink="/documentation/getting-started/introduction">Documentation</a>
             <span>&bull;</span>
             <a mat-button routerLink="/documentation/changelog">Changelog</a>-->
+<!--
         </div>
+-->
 
+<!--
     </div>
+-->
 
 </mat-toolbar>

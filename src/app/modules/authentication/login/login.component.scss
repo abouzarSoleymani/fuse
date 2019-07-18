@@ -43,6 +43,9 @@ login {
 
                     mat-form-field {
                         width: 100%;
+                        input{
+                            text-align: center;
+                        }
                     }
 
                     mat-checkbox {

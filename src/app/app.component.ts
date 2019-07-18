@@ -14,6 +14,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { navigation } from 'app/navigation/navigation';
 import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationPersian } from 'app/navigation/i18n/fa';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
     selector   : 'app',

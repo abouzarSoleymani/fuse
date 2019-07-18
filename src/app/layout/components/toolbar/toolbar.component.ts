@@ -14,6 +14,7 @@ import {LocalStorageService} from 'app/core/service/local-storage.service';
 import {Store} from '@ngrx/store';
 import {AppState} from 'app/reducers';
 import {ResponseApiModel} from 'app/model/responseApi.model';
+import {GeocodingService} from 'app/modules/main/map/geocoding.service';
 
 @Component({
     selector     : 'toolbar',
@@ -48,7 +49,8 @@ export class ToolbarComponent implements OnInit, OnDestroy
         private _translateService: TranslateService,
         private router: Router,
         private store: Store<AppState>,
-        private localStorage: LocalStorageService
+        private localStorage: LocalStorageService,
+        private geocoder: GeocodingService
     )
     {
         // Set the defaults
@@ -170,5 +172,8 @@ export class ToolbarComponent implements OnInit, OnDestroy
     }
     logout(): void {
         this.store.dispatch(new Logout());
+    }
+    backState(){
+        this.geocoder.unFreezMarker();
     }
 }

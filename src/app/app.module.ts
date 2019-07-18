@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { MatButtonModule, MatIconModule } from '@angular/material';
+import {MatButtonModule, MatIconModule, MatProgressSpinnerModule} from '@angular/material';
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { TranslateModule} from '@ngx-translate/core';
 import 'hammerjs';
@@ -31,18 +31,19 @@ import {AuthGuard} from 'app/modules/authentication/auth.guard';
 import {CustomSerializer} from 'app/shared/utils';
 import {AuthenticationModule} from 'app/modules/authentication/authentication.module';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
+import {HttpConfigInterceptor} from 'app/core/service/httpconfig.interceptor';
 
 
 @NgModule({
     declarations: [
         AppComponent
     ],
-    imports     : [
+    imports: [
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
         AppRoutingModule,
-        SweetAlert2Module.forRoot()  ,
+        SweetAlert2Module.forRoot(),
         TranslateModule.forRoot(),
         // Material moment date module
         MatMomentDateModule,
@@ -62,14 +63,15 @@ import {LeafletModule} from '@asymmetrik/ngx-leaflet';
         LayoutModule,
         SharedModule,
         AuthenticationModule,
-        StoreModule.forRoot(reducers, { metaReducers }),
+        StoreModule.forRoot(reducers, {metaReducers}),
         !environment.production ? StoreDevtoolsModule.instrument() : [],
         EffectsModule.forRoot([]),
-        StoreRouterConnectingModule.forRoot({stateKey:'router'}),
-        LeafletModule.forRoot()
+        StoreRouterConnectingModule.forRoot({stateKey: 'router'}),
+        LeafletModule.forRoot(),
     ],
     providers: [AuthGuard,
-        { provide: RouterStateSerializer, useClass: CustomSerializer }
+        { provide: RouterStateSerializer, useClass: CustomSerializer },
+        { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }
     ],
     bootstrap   : [
         AppComponent

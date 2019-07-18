@@ -15,8 +15,15 @@ import {isPlatformBrowser} from '@angular/common';
 import 'leaflet';
 import {GeocodingService} from 'app/modules/main/map/geocoding.service';
 import {FuseConfigService} from '@fuse/services/config.service';
-import {computeMsgId} from '@angular/compiler/src/i18n/digest';
 import 'leaflet-routing-machine';
+import 'leaflet-search';
+import {ApiCallService} from 'app/core/service/apiCall.service';
+import {ErrorDialogService} from 'app/core/service/errordialog.service';
+import {FuseSidebarService} from '@fuse/components/sidebar/sidebar.service';
+import {consoleTestResultHandler} from 'tslint/lib/test';
+import {isLoggedIn} from 'app/modules/authentication/auth.selectors';
+import {LocalStorageService} from 'app/core/service/local-storage.service';
+import {ResponseApiModel} from 'app/model/responseApi.model';
 declare let L;
 
 
@@ -25,20 +32,27 @@ declare let L;
     templateUrl  : './map.component.html',
     styleUrls    : ['./map.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations   : fuseAnimations,
+
 })
 export class MapComponent implements OnInit{
 
     isOnBrowser=false;
-    showSelectedMarker=false;
-    calcPrice = false;
+    currentmarker;
+    pinSourceIconUrl = 'assets/images/map/source.png';
+    pinDestination1IconUrl = 'assets/images/map/destination1.png';
+    pinDestination2IconUrl = 'assets/images/map/destination2.png';
+    shadowUrl = 'https://unpkg.com/leaflet@1.4.0/dist/images/marker-shadow.png';
 
     constructor(private geocoder: GeocodingService,
                 @Inject(PLATFORM_ID) private platformId: Object,
                 private http: HttpClient,
                 private renderer: Renderer2,
-                private _fuseConfigService: FuseConfigService) {
-
+                private _fuseConfigService: FuseConfigService,
+                private _fuseSidebarService: FuseSidebarService,
+                private apiCall: ApiCallService,
+                private localStorage: LocalStorageService,
+                private errorDialog: ErrorDialogService) {
 
         if (isPlatformBrowser(this.platformId)) {
             this.isOnBrowser=true;
@@ -48,6 +62,7 @@ export class MapComponent implements OnInit{
         this._fuseConfigService.config = {
             layout: {
                 navbar   : {
+                    hidden: false
                 },
                 toolbar  : {
                     hidden: false
@@ -69,19 +84,18 @@ export class MapComponent implements OnInit{
     address;
     map;
     mapCenter;
-    currentmarker;
-    pinSourceIconUrl = 'assets/images/map/source.png';
-    pinDestination1IconUrl = 'assets/images/map/destination1.png';
-    pinDestination2IconUrl = 'assets/images/map/destination2.png';
+    vehicleType: any[] = [];
+    user: ResponseApiModel<any>;
+
     currentLocationIconUrl = 'assets/images/map/my_location_icon.png';
-    shadowUrl = 'https://unpkg.com/leaflet@1.4.0/dist/images/marker-shadow.png';
+
 
     mapZoom={animate:true};
     selectedAddress = {lat: '', lng: '', address: ''};
     markers: any [] = [];
     options = {
         layers: [
-            tileLayer('https://pm2.parsimap.com/comapi.svc/tile/parsimap/{x}/{y}/{z}/84785dc1-9106-4bd2-a400-770acb187fa4'),
+            tileLayer('https://api.cedarmaps.com/v1/tiles/cedarmaps.streets/{z}/{x}/{y}.png?access_token=d058bfc14a9d1305de1dbabd7161f67cd2f37933'),
         ],
         zoom: 14,
         center: latLng(35.710106, 51.396511)
@@ -89,13 +103,89 @@ export class MapComponent implements OnInit{
 
 
     onMapReady(map) {
-
         this.map = map;
         this.myLocationIcon();
 
         this.searchCurrentLocation();
         this.addNewMarker(null);
-      //  this.getMyLocation();
+        this.search();
+        this.mapMove();
+    }
+    getCenterMarker(){
+        this.currentmarker.setLatLng(this.map.getCenter());
+    }
+    mapMove(){
+        this.map.on('move', (e) => {
+            if(!this.geocoder.freezMarkers)
+                this.getCenterMarker();
+        });
+
+            this.map.on('moveend', (e) =>{
+                setTimeout( () => {
+                    if(this.geocoder.getMarkers().length == 1){
+                        this.getPassengerNearByDriver(this.map.getCenter());
+                    }
+                }, 2000)
+            })
+
+
+    }
+    addNewMarker(location){
+                let iconUrl;
+                console.log(this.geocoder.getMarkers().length)
+                let latlng = location == null ||  location == undefined ? '': location;
+                //  if(!this.isFreeMarker()){
+                if(this.geocoder.getMarkers().length === 0)
+                iconUrl =  this.pinSourceIconUrl;
+                else if(this.geocoder.getMarkers().length === 1)
+                iconUrl = this.pinDestination1IconUrl;
+
+                console.log(iconUrl, latlng)
+                this.createMarker(iconUrl, latlng);
+                // }
+                //   if(!this.isFreeMarker())
+
+    }
+
+
+    isFreeMarker(){
+        if(this.geocoder.getMarkers().length < 2 ){
+
+            //  this.routing();
+            return true;
+        }
+        return false;
+    }
+
+    createMarker(iconUrl, location){
+        console.log(iconUrl, location)
+        const newMarker = marker(
+            this.geocoder.getMarkers().length == 0 ? this.map.getCenter(): [ location.lat , location.lng],
+            {
+                interactive: true,
+                draggable: false,
+                icon: icon({
+                    className: 'pin',
+                    iconSize: [ 25, 41 ],
+                    iconAnchor: [10, 10],
+                    iconUrl: iconUrl,
+                    shadowUrl: this.shadowUrl,
+                })
+            }
+        ).on('click', (event: any) => {
+            if(this.isFreeMarker()) {
+                this.addNewMarker(event.latlng)
+            }else{
+                this.geocoder.freezMarkers = true;
+                    this.fitBound();
+                    this.statusFooter();
+            }
+
+        })
+        this.geocoder.setMarker(newMarker);
+        console.log(this.geocoder.getMarkers())
+        this.currentmarker = this.geocoder.getMarkers()[this.geocoder.getMarkers().length - 1];
+        console.log(this.currentmarker)
     }
 
     myLocationIcon(){
@@ -116,7 +206,6 @@ export class MapComponent implements OnInit{
 
         let pinId = document.getElementById('my-location');
         this.renderer.listen(pinId, 'click', (event) => {
-         //   this.getMyLocation();
             this.searchCurrentLocation();
         })
     }
@@ -124,32 +213,60 @@ export class MapComponent implements OnInit{
 
     ngOnInit(): void {
         console.log(this.geocoder.getClientLocation());
-    }
-
-
-    createMarker(iconUrl, location){
-        console.log(iconUrl)
-        const newMarker = marker(
-            this.markers.length == 0 ? this.map.getCenter(): [ location.lat , location.lng],
-            {
-                icon: icon({
-                    iconSize: [ 25, 41 ],
-                    iconAnchor: [10, 10],
-                    iconUrl: iconUrl,
-                    shadowUrl: this.shadowUrl,
-                })
+        this.geocoder.markerss.subscribe(
+            (data: any) =>{
+                console.log(data)
+                this.markers = data;
+                this.geocoder.freezMarkers = false;
             }
-        ).on('click', (event: any) => {
-            this.addNewMarker(event.latlng)
-        })
-            this.markers.push(newMarker);
-        console.log(this.markers)
-            this.currentmarker = this.markers[this.markers.length - 1];
-
-        //  this.mapCenter = latLng(location.lat, location.lng);
-      //  setTimeout(() => {this.map.setZoom(14)},400)
+        )
+        this.geocoder.isUnfreezMarkers.subscribe(
+            (data) =>{
+                console.log(data)
+                this.getCenterMarker();
+            }
+        )
+        console.log(this._fuseSidebarService.getSidebar('navbar'))
+        setTimeout( () => {
+            this._fuseSidebarService.getSidebar('navbar').toggleFold();
+        } , 500)
     }
 
+    getPassengerNearByDriver(latLng){
+        let data = {
+            "iPassengerId": "",
+            "dSourceLatitude": latLng.lat,
+            "dSourceLongitude": latLng.lng
+        }
+
+        if(isLoggedIn){
+            this.user = this.localStorage.getItem('user');
+            data.iPassengerId = (this.user.data[0].iPassengerId).toString();
+            this.apiCall.getResponse('passenger_near_by_drivers', data).subscribe(
+                (data) =>{
+                    this.errorDialog.openDialog(data.settings.message, data.settings.success, 'console');
+                    console.log(data.data[0].vehicle_type)
+                    if(data.data[0].vehicle_type && data.data[0].vehicle_type.length > 0) {
+                        this.vehicleType = data.data[0].vehicle_type;
+                        this.addVehicleToMap();
+                    }
+                }
+            )
+        }
+
+    }
+
+    addVehicleToMap(){
+            console.log(this.vehicleType)
+            console.log(this.vehicleType)
+            for (let vehType of this.vehicleType){
+                //let icon = veh.vVehicleMapIcon;
+                if(vehType.near_by_drivers && vehType.near_by_drivers.length>0)
+                for(let vehTypeNear of vehType.near_by_drivers){
+                    console.log(vehTypeNear)
+                }
+            }
+    }
     setAddress(location){
         this.http.get(`https://pm2.parsimap.com/comapi.svc/areaInfo/${location.lat}/${location.lng}/18/1/84785dc1-9106-4bd2-a400-770acb187fa4/1`).subscribe(
             (data:any) => {
@@ -168,7 +285,10 @@ export class MapComponent implements OnInit{
                     marker(
                         [ data.lat , data.lng],
                         {
+                            interactive: false,
+                            draggable: false,
                             icon: icon({
+                                className: 'currentLocation',
                                 iconSize: [ 25, 41 ],
                                 iconAnchor: [10, 10],
                                 iconUrl:  this.currentLocationIconUrl,
@@ -180,49 +300,24 @@ export class MapComponent implements OnInit{
       }
 
 
-      addNewMarker(location){
-        console.log(location)
-          let iconUrl;
-          let latlng = location == null ||  location == undefined ? '': location;
-          if(this.markers.length < 2){
-              if(this.markers.length === 0)
-                  iconUrl =  this.pinSourceIconUrl;
-              else if(this.markers.length === 1)
-                  iconUrl = this.pinDestination1IconUrl;
-              this.createMarker(iconUrl, latlng);
-          }else{
-             this.calcPrice = true;
-             this.routing();
-          }
-          this.map.on('move', (e) => {
-              if(this.calcPrice == false)
-              this.currentmarker.setLatLng(this.map.getCenter());
-          });
-
-       //   if(this.markers.length == 0){
-       //     }
-/*          const firstIconMarker = L.icon({
-              iconUrl: this.pinSourceIconUrl,
-              iconSize:     [20, 20], // size of the icon
-              iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
-          });
-          this.currentmarker = new L.marker(map.getCenter(), {icon: firstIconMarker, clickable:false}).on('click', (event) => {
-              this.setMarker(event)
-          })
-
-          this.currentmarker.addTo(map);*/
 
 
+      statusFooter(){
+          let config = {layout: {footer : { hidden: false}}};
+          this._fuseConfigService.setConfig( config )
+      }
+      fitBound(){
+            let markers = this.geocoder.getMarkers();
+          let  bounds = new L.LatLngBounds(markers[0]._latlng, markers[1]._latlng);
+          this.map.fitBounds(bounds, {padding: [100, 100]});
       }
 
-    routing(){
-        console.log(this.markers[0]._latlng)
-        console.log(this.markers[1]._latlng)
+    routing() {
         const router = new L.Routing.OSRMv1({
-            serviceUrl: 'https://pm2.parsimap.com/comapi.svc'
+            serviceUrl: 'https://api.cedarmaps.com/v1/direction'
         });
         L.Routing.control({
-                router: router,
+                 router: router,
                 createMarker: () => {return null},
                 waypoints: [
                     L.latLng(this.markers[0]._latlng.lat, this.markers[0]._latlng.lng),
@@ -237,83 +332,21 @@ export class MapComponent implements OnInit{
             }).addTo(this.map);
     }
 
-
-
-
-
-
-
-
-
-
-
-    emitnClickMarker(){
-        this.clickOnMarker.emit(true);
+    search(){
+        let searchLayer = L.layerGroup().addTo(this.map);
+        this.map.addControl( new L.Control.Search({
+            position:'topleft',
+            url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}',
+            propertyName: 'display_name',
+            jsonpParam: 'json_callback',
+            propertyLoc: ['lat','lon'],
+            layer: searchLayer,
+            initial: false,
+            autoType: false,
+            minLength: 2,
+            autoCollapse: true,
+        }) );
     }
 
 
-/*    cleanMap(){
-        this.markers=[];
-        this.selectedAddress = {lat: '', lng: '', address: ''};
-    }*/
-
-
-    /*    leafletClick(event){
-            this.showSelectedMarker=true;
-            this.setAddress(event.latlng);
-        }*/
-
-      getMyLocation(){
-          this.map.on('locationfound', (e) => {
-              this.onLocationFound(e);
-          });
-          this.map.on('locationerror', (e) => {
-              this.onLocationError(e);
-          });
-          this.map.locate({setView: true, watch: true, maxZoom: 32 , enableHighAccuracy: true, maximumAge: 60000});
-          setTimeout(() => {this.map.setZoom(14)},400)
-
-      }
-     onLocationFound(e) {
-        marker(
-             [ e.latlng.lat , e.latlng.lng],
-             {
-                 icon: icon({
-                     iconSize: [ 25, 41 ],
-                     iconAnchor: [10, 10],
-                     iconUrl:  this.currentLocationIconUrl,
-                 })
-             }
-         ).addTo(this.map);
-       // const radius = e.accuracy / 2;
-     //   L.marker(e.latlng).addTo(this.map)
-          //  .bindPopup("You are within " + radius + " meters from this point").openPopup();
-       // L.circle(e.latlng, radius).addTo(map);
-    }
-    onLocationError(e){
-        alert(e.message)
-    }
-
-
-    private addMarker(e: L.LeafletMouseEvent) {
-       // const shortLat = Math.round(e.latlng.lat * 1000000) / 1000000;
-      //  const shortLng = Math.round(e.latlng.lng * 1000000) / 1000000;
-      //  const popup = `<div>Latitude: ${shortLat}<div><div>Longitude: ${shortLng}<div>`;
-        const icon = L.icon({
-            iconUrl: this.currentLocationIconUrl,
-            shadowUrl:''
-        });
-
-        const marker = L.marker(e.latlng, {
-            draggable: true,
-            icon
-        })
- /*           .bindPopup(popup, {
-                offset: L.point(12, 6)
-            })*/
-        //    .addTo(this.map)
-         //   .openPopup();
-
-       // marker.on("click", () => marker.remove());
-    }
 }

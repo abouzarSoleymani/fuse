@@ -1,5 +1,6 @@
 @import "src/@fuse/scss/fuse";
 @import '~leaflet/dist/leaflet.css';
+@import '~leaflet-search/dist/leaflet-search.min.css';
 @import "~leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
 
@@ -31,7 +32,18 @@
  div#my-location {
     margin-bottom: 50px;
 }
-.leaflet-marker-icon{
-    width: 35px !important;
-    height: 50px !important;
+.pin{
+    width: 50px !important;
+    height: 70px !important;
+}
+.currentLocation{
+    width: 50px !important;
+    height: 70px !important;
+}
+.search-input {
+    font-family:Courier
+}
+.search-input,
+.leaflet-control-search {
+    max-width:400px;
 }

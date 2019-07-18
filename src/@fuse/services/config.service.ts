@@ -133,6 +133,7 @@ export class FuseConfigService
         // If emitEvent option is true...
         if ( opts.emitEvent === true )
         {
+            console.log(config)
             // Notify the observers
             this._configSubject.next(config);
         }

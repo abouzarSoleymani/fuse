@@ -6,17 +6,25 @@ import {TranslateModule} from '@ngx-translate/core';
 import {MaterialModule} from 'app/shared/material/material.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import {SwiperModule} from 'ngx-swiper-wrapper';
+import {MatProgressSpinnerModule} from '@angular/material';
+import {NgxSpinnerModule} from 'ngx-spinner';
 
 
 
 
+// @ts-ignore
 const I_MODULES = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     TranslateModule,
     MaterialModule,
-    SweetAlert2Module
+    SweetAlert2Module,
+    SwiperModule,
+    MatProgressSpinnerModule,
+    NgxSpinnerModule
+
 
 ];
 const E_MODULES = [
@@ -27,7 +35,10 @@ const E_MODULES = [
     RtlSupportDirective,
     TranslateModule,
     MaterialModule,
-    SweetAlert2Module
+    SweetAlert2Module,
+    SwiperModule,
+    MatProgressSpinnerModule,
+    NgxSpinnerModule
 ];
 
 @NgModule({

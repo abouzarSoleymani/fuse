@@ -31,7 +31,7 @@ export const fuseConfig: FuseConfig = {
         },
         footer   : {
             customBackgroundColor: true,
-            background           : 'fuse-navy-900',
+            background           : 'fuse-navy-50',
             hidden               : false,
             position             : 'below-fixed'
         },

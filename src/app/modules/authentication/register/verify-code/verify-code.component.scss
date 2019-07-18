@@ -43,6 +43,9 @@ verify-code {
 
                     mat-form-field {
                         width: 100%;
+                        input{
+                            text-align: center;
+                        }
                     }
 
                     .submit-button {

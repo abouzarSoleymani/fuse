@@ -21,6 +21,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
                  private spinner: NgxSpinnerService) { }
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         this.spinner.show();
+        console.log(this.spinner.show())
         const token =  this.localStorage.getItem('user');
         console.log(token.data[0].iPassengerId)
         if (token) {
@@ -48,6 +49,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             map((event: HttpEvent<any>) => {
                 this.spinner.hide();
+                console.log(this.spinner.hide());
                 if (event instanceof HttpResponse) {
                     //console.log('event--->>>', event);
                 }

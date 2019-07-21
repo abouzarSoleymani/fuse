@@ -1,31 +1,75 @@
 <mat-toolbar style="height:auto">
     <div fxLayout="column"  fxFlex fxFlexFill >
 
-        <div fxLayout="row"  class="slider-vehicles" >
-            <swiper  class="swiper-container" fxFlex="auto" [config]="config" [disabled]="disabled">
-                <div *ngFor="let slide of slides" class="swiper-slide">
-                    <div fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
-                        <div class="service-type cursor-hand">
-                            <img src="{{slide.image}}">
+        <div fxLayout="row"  class="slider-vehicles"  *ngIf="vehicles">
+            <swiper  class="swiper-container" fxFlex="auto" [config]="config" [disabled]="disabled"  (indexChange)="indexOnChange($event)"   [(index)]="index" #SwiperDirective>
+                <div *ngFor="let veh of vehicles" class="swiper-slide" (click)="getPriceEstimate(veh)" [ngClass]="{'active-service': allowVehicleActived == veh}"  >
+                    <div *ngIf="veh?.eAllow == 'Yes'" class="service-type" >
+                            <img  src="{{veh?.vVehicleIcon}}">
                             <div class="description-active">
-                                {{slide.title}}
+                                {{veh?.vVehicleName}}
                             </div>
-                        </div>
-
                     </div>
-                </div>
-            </swiper>
+                 </div>
+         </swiper>
         </div>
         <div fxLayout="row"  class="ride-options" fxLayoutAlign="space-between stretch"  >
-
-            <div  class="cursor-hand" fxLayoutAlign="center center" fxFlex="grow" >
+            <div  class="cursor-hand" fxLayoutAlign="center center" fxFlex="grow" (click)="setDiscountOptions()" >
                 کد تخفیف
             </div>
-            <div class="ride-price " fxLayoutAlign="center center"  fxFlex="grow"  >
-                  ۱۱۰۰۰ ریال
+            <div class="ride-price" fxLayoutAlign="center center"  fxFlex="grow"  >
+                {{allowVehicleActived?.vAmount}}  ریال
             </div>
-            <div  class="cursor-hand" fxLayoutAlign="center center"  fxFlex="grow">
+            <div  class="cursor-hand" fxLayoutAlign="center center"  fxFlex="grow" (click)="setRideOptions()" >
               گزینه ها
+            </div>
+        </div>
+        <div fxLayout="column"  class="ride-options" fxFlex="auto" *ngIf="rideOptions" >
+            <div  class="cursor-hand" fxLayout="row" fxLayoutAlign="center center" [fxFlex] fxFlex="98" (click)="setSecondDestination()">
+                <button mat-stroked-button [disabled]="!secondDestination"  fxFlex="98" ><span>انتخاب مقصد دوم</span>
+                 <mat-icon  class="mat-icon" aria-hidden="true">map</mat-icon>
+                </button>
+            </div>
+            <div  class="cursor-hand" fxLayout="row" fxLayoutAlign="center center" [fxFlex] fxFlex="98" (click)="setRoundTrip()" >
+                <button mat-stroked-button [disabled]="!roundTrip" fxFlex="98" ><span>رفت و برگشت به مبدا</span>
+                    <mat-icon  class="mat-icon" aria-hidden="true">import_export</mat-icon>
+                </button>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 0 auto" dir="rtl">
+
+                <mat-form-field appearance="outline" fxFlex="98">
+                    <mat-label>توقف در مسیر</mat-label>
+                    <mat-select >
+                        <mat-option *ngFor="let wType of waitTypes" [value]="wType">
+                            {{wType?.vTitle}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon matSuffix class="secondary-text">access_time</mat-icon>
+                </mat-form-field>
+
+            </div>
+<!--            <div  class="cursor-hand" fxLayout="row" fxLayoutAlign="center center" [fxFlex] fxFlex="98" (click)="setWaiting()" >
+                <button mat-stroked-button [disabled]="!waiting" fxFlex="98" > <span>توقف در مسیر</span>
+                    <mat-icon  class="mat-icon" aria-hidden="true">access_time</mat-icon>
+                </button>
+            </div>-->
+  <!--              <mat-form-field>
+                    <select matNativeControl placeholder="توقف در مسیر" [disabled]="disableSelect.value">
+                        <option value="volvo">Volvo</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                    </select>
+                </mat-form-field>-->
+
+        </div>
+        <div fxLayout="column"  class="ride-discount" fxFlex="auto" fxLayoutAlign="center center" *ngIf="discountOptions" dir="rtl">
+            <div  class="cursor-hand" fxLayout="row"   (click)="setSecondDestination()">
+                <mat-form-field class="discount-form" >
+                    <mat-placeholder>کد تخفیف را وارد نمایید</mat-placeholder>
+                    <input matInput type="search">
+                    <button class="cta-button mat-raised-button mat-accent"> <span>ثبت</span>
+                    </button>
+                </mat-form-field>
             </div>
         </div>
         <div fxLayout="row"  class="request-taxi" fxLayoutAlign="center stretch"  >

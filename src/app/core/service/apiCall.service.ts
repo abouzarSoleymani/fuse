@@ -11,7 +11,7 @@ import {HttpClient} from '@angular/common/http';
 })
 export class ApiCallService {
     constructor(private http: HttpClient) { }
-     getResponse(endPoint: string, data: any): Observable<ResponseApiModel<any>> {
+     getResponse(endPoint: string, data: any ): Observable<ResponseApiModel<any>> {
         return this.http.post<ResponseApiModel<any>>(`${environment.apiBaseUrl}${endPoint}`, data);
     }
 }

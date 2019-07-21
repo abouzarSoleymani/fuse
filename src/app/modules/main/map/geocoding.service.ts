@@ -13,14 +13,16 @@ import {icon, marker} from 'leaflet';
 })
 export class GeocodingService {
   constructor(@Inject(PLATFORM_ID) private platformId: Object,
+              private errorDialog: ErrorDialogService,
+              private localStorage: LocalStorageService,
+              private apiCall: ApiCallService
            ) {
   }
   markers: any [] = [];
-  calcPrice;
+  user: ResponseApiModel<any>;
   map;
-  vehicleType;
-  markerss = new Subject();
-  currentmarker;
+  markersChanged = new Subject();
+  allVehiclesAvalible = new Subject();
   freezMarkers = false;
   isUnfreezMarkers = new Subject();
   location = {lat: 0, lng: 0};
@@ -50,7 +52,10 @@ export class GeocodingService {
   }
   setMarker(newMarker){
       this.markers.push(newMarker);
-      this.markerss.next(this.markers)
+      this.markersChanged.next(this.markers)
+  }
+  resetMArkers(){
+      this.markers =  [];
   }
   unFreezMarker(){
       this.freezMarkers = false;
@@ -60,7 +65,32 @@ export class GeocodingService {
     //  this.addNewMarker(null, this.map);
 
   }
+    estimateFare() {
 
+        console.log(this.getMarkers())
+        let data = {
+            'iPassengerId': '',
+            'dSourceLatitude': this.getMarkers()[0]._latlng.lat.toString(),
+            'dSourceLongitude': this.getMarkers()[0]._latlng.lng.toString(),
+            'dDestinationLatitude': this.getMarkers()[this.getMarkers().length - 1]._latlng.lat.toString(),
+            'dDestinationLongitude': this.getMarkers()[this.getMarkers().length - 1]._latlng.lng.toString(),
+        }
+        if(isLoggedIn){
+            this.user = this.localStorage.getItem('user');
+            data.iPassengerId = (this.user.data[0].iPassengerId).toString();
+            this.apiCall.getResponse('estimate_fare_all', data).subscribe(
+                (data) => {
+                    console.log(data)
+                    this.errorDialog.openDialog(data.settings.message, data.settings.success, 'console');
+                    this.getAllVehiclesAvalible(data.data);
+                }
+            )
+        }
+    }
+    getAllVehiclesAvalible(vehicles){
+      console.log('ssss')
+       this.allVehiclesAvalible.next(vehicles);
+    }
 
 
 

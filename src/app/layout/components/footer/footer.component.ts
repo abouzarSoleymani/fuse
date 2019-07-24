@@ -1,8 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {SwiperComponent, SwiperConfigInterface, SwiperDirective} from 'ngx-swiper-wrapper';
 import {GeocodingService} from 'app/modules/main/map/geocoding.service';
 import {RideOptionService} from 'app/layout/components/footer/rideOption.service';
 import {ErrorDialogService} from 'app/core/service/errordialog.service';
+import Swal from "sweetalert2";
 
 @Component({
     selector   : 'footer',
@@ -21,6 +22,7 @@ export class FooterComponent implements OnInit
     ];
     public disabled: boolean = false;
     vehicles;
+    @ViewChild('voucherCode', {static: true}) voucherCode: ElementRef;
     allowVehicleActived;
     rideOptions = false;
     discountOptions = false;
@@ -142,5 +144,24 @@ export class FooterComponent implements OnInit
     }
     setWaiting(){
         this.waiting = !this.waiting;
+    }
+    checkVoucher(){
+        console.log(this.voucherCode.nativeElement.value)
+        if(!this.voucherCode.nativeElement.value){
+            Swal.fire({
+                position: 'top-end',
+                type: 'error',
+                title: 'لطفا کد تخفیف را وارد نمایید',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            return;
+        }
+        console.log(this.voucherCode.nativeElement.value)
+        /*        this.rideOptionsService.getPassengerValidateVoucher().subscribe(
+                    (data) => {
+                        console.log(data)
+                    }
+                )*/
     }
 }

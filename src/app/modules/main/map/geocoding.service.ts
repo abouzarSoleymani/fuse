@@ -88,7 +88,6 @@ export class GeocodingService {
         }
     }
     getAllVehiclesAvalible(vehicles){
-      console.log('ssss')
        this.allVehiclesAvalible.next(vehicles);
     }
 

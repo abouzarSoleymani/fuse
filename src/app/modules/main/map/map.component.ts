@@ -177,7 +177,7 @@ export class MapComponent implements OnInit{
                 })
             }
         ).on('click', (event: any) => {
-            console.log(this.geocoder.getMarkers()[this.geocoder.getMarkers().length - 1].options)
+            this.geocoder.getMarkers()[this.geocoder.getMarkers().length - 1].options.freez = true;
             if(this.isFreeMarker()) {
                 this.geocoder.getMarkers()[this.geocoder.getMarkers().length - 1].setLatLng(event.latlng);
 
@@ -190,7 +190,6 @@ export class MapComponent implements OnInit{
             }
 
         })
-        console.log(this.geocoder.getMarkers())
         this.geocoder.setMarker(newMarker);
         console.log(this.geocoder.getMarkers())
         this.currentmarker = this.geocoder.getMarkers()[this.geocoder.getMarkers().length - 1];

@@ -63,11 +63,11 @@
 
         </div>
         <div fxLayout="column"  class="ride-discount" fxFlex="auto" fxLayoutAlign="center center" *ngIf="discountOptions" dir="rtl">
-            <div  class="cursor-hand" fxLayout="row"   (click)="setSecondDestination()">
+            <div  class="cursor-hand" fxLayout="row" >
                 <mat-form-field class="discount-form" >
                     <mat-placeholder>کد تخفیف را وارد نمایید</mat-placeholder>
-                    <input matInput type="search">
-                    <button class="cta-button mat-raised-button mat-accent"> <span>ثبت</span>
+                    <input matInput type="search" #voucherCode>
+                    <button class="cta-button mat-raised-button mat-accent" (click)="checkVoucher()" > <span>ثبت</span>
                     </button>
                 </mat-form-field>
             </div>

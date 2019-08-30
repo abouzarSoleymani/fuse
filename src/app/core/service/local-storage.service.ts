@@ -20,4 +20,12 @@ export class LocalStorageService {
     removeItem(key: string): void {
         localStorage.removeItem(`${APP_PREFIX}${key}`);
     }
+    updateItem(key:string, object:any){
+        let items = this.getItem(key);
+        for (var item in items) {
+                if(item == Object.keys(object)[0])
+                    items[item] = object[item];
+        }
+        this.setItem(key, items)
+    }
 }

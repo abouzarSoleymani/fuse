@@ -14,6 +14,8 @@ import {User} from 'app/model/user.model';
 import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2';
 import {ResponseApiModel} from 'app/model/responseApi.model';
+import {Ride} from 'app/modules/authentication/ride.actions';
+import {RideStatesModel} from 'app/model/rideStates.model';
 
 @Component({
     selector     : 'login',
@@ -96,8 +98,8 @@ export class LoginComponent implements OnInit
                             title: data.settings.message
                              })
                         user = data.data[0];
-                        console.log(user)
                         this.store.dispatch(new Login({data}));
+                        this.store.dispatch(new Ride({data: new RideStatesModel()}));
                         this.router.navigateByUrl('/apps');
                     }else{
                         Toast.fire({

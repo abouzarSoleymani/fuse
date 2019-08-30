@@ -9,6 +9,14 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import {SwiperModule} from 'ngx-swiper-wrapper';
 import {MatProgressSpinnerModule} from '@angular/material';
 import {NgxSpinnerModule} from 'ngx-spinner';
+import {ContentModule} from 'app/layout/components/content/content.module';
+import { DialogElementsExampleDialogComponent } from './dialog-elements-example-dialog/dialog-elements-example-dialog.component';
+import { StarRatingComponent } from './star-rating/star-rating.component';
+import { RadioButtonComponent } from './radio-button/radio-button.component';
+import { RadioGroupComponent } from './radio-group/radio-group.component';
+import { PassengerReasonsComponent } from './passenger-reasons/passenger-reasons.component';
+import { TravelOptionsComponent } from './travel-options/travel-options.component';
+import { ToolbarTravelOptionsComponent } from './toolbar-travel-options/toolbar-travel-options.component';
 
 
 
@@ -23,7 +31,8 @@ const I_MODULES = [
     SweetAlert2Module,
     SwiperModule,
     MatProgressSpinnerModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    ContentModule
 
 
 ];
@@ -38,13 +47,19 @@ const E_MODULES = [
     SweetAlert2Module,
     SwiperModule,
     MatProgressSpinnerModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    ContentModule,
+    StarRatingComponent,
+    PassengerReasonsComponent,
+    TravelOptionsComponent,
+    ToolbarTravelOptionsComponent
 ];
 
 @NgModule({
     imports: I_MODULES,
     exports: E_MODULES,
-    declarations: [RtlSupportDirective]
+    entryComponents: [DialogElementsExampleDialogComponent, StarRatingComponent, PassengerReasonsComponent, TravelOptionsComponent,ToolbarTravelOptionsComponent],
+    declarations: [RtlSupportDirective, DialogElementsExampleDialogComponent, StarRatingComponent, RadioButtonComponent, RadioGroupComponent, PassengerReasonsComponent, TravelOptionsComponent, ToolbarTravelOptionsComponent]
 })
 export class SharedModule {
 }

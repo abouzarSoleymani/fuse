@@ -1,0 +1,55 @@
+<main fxLayout="column" fxLayoutAlign="space-around stretch">
+    <div fxLayout="row"  class="driver-ride-options" fxLayoutAlign="space-between stretch"  >
+        <div fxLayout="column" fxLayoutAlign="center center"  fxFlex="grow" >
+            <div>{{rideDetails?.vVehicleRegistrationNumber.detail}}   ایران {{rideDetails?.vVehicleRegistrationNumber.section}}</div>
+            <div><span class="title">خودرو :</span><span>{{rideDetails?.vVehicleMakeModel}} {{rideDetails?.vColorCar}}</span></div>
+            <div><span class="title"> هزینه سفر شما :</span><span> {{rideDetails?.fTotalFarePayable}} ریال</span></div>
+                                <div><span class="title">زمان تقریبی :</span><span>۷ دقیقه</span></div>
+        </div>
+        <div  fxLayout="column" fxLayoutAlign="center center" class="driver-ride-detail" fxFlex="grow"  >
+            <div class="avatar-container">
+                <img class="avatar" src="{{rideDetails?.vDriverProfile}}">
+            </div>
+            <div><span  class="title">راننده:</span> <span>{{rideDetails?.vDriverName}}</span></div>
+        </div>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="center center">
+        <mat-card class="score-card" >
+            <mat-card-header class="score-header">
+                <mat-card-title class="h2">امیدوارم که سفر خوبی بوده باشه</mat-card-title>
+                <mat-card-subtitle class="desc">به راننده ما امتیاز دهید . نظر شما همیشه مهم است</mat-card-subtitle>
+            </mat-card-header>
+            <mat-star-rating [rating]="rating"  [starCount]="starCount" [color]="starColor" (ratingUpdated)="onRatingChanged($event)"></mat-star-rating>
+            <mat-card-content>
+                <app-passenger-reasons *ngIf="showPassengerReason" (radioChange)="setSelectedReason($event)" #passengerReasons></app-passenger-reasons>
+            </mat-card-content>
+            <mat-card-actions>
+                <div fxLayout="row" fxLayoutAlign="space-between stretch">
+              <button mat-raised-button color="warn" fxLayoutAlign="center center" class="score-card-buttons"  fxFlex="grow" ><span>تماس با پشتیبانی</span>
+                  <mat-icon  class="mat-icon" aria-hidden="true">phone</mat-icon>
+              </button>
+                <button mat-raised-button color="accent" fxLayoutAlign="center center" (click)="passengerRideFeedback()" fxFlex="grow">ثبت امتیاز<span></span>
+                    <mat-icon  class="mat-icon" aria-hidden="true">done</mat-icon>
+                </button>
+                </div>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+<!--    <div fxLayout="row" fxLayoutAlign="center end">
+        <div  class="request-center-btn warn cursor-hand"  fxFlex="grow"  >
+            <button mat-stroked-button fxFlex="98" ><span>  پرداخت آنلاین</span>
+                <mat-icon  class="mat-icon" aria-hidden="true">attach_money</mat-icon>
+            </button>
+        </div>
+        <div  class="request-center-btn primary cursor-hand" fxLayoutAlign="center center" fxFlex="grow"  >
+             <a>
+                 <button mat-stroked-button fxFlex="98" ><span>تماس با راننده</span>
+                     <mat-icon  class="mat-icon" aria-hidden="true">phone</mat-icon>
+                 </button>
+             </a>
+        </div>
+    </div>-->
+</main>
+
+
+

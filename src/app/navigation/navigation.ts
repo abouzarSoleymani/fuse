@@ -14,7 +14,7 @@ export const navigation: FuseNavigation[] = [
                 translate: 'NAV.MAP',
                 type     : 'item',
                 icon     : 'map',
-                url  : '/main'
+                url  : '/main/map'
             }
         ]
     },

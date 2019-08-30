@@ -21,9 +21,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
                  private spinner: NgxSpinnerService) { }
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         this.spinner.show();
-        console.log(this.spinner.show())
         const token =  this.localStorage.getItem('user');
-        console.log(token.data[0].iPassengerId)
         if (token) {
             const headers = new HttpHeaders({
                 'security_key':  token.data[0].security_key,
@@ -37,9 +35,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
                     .set('obj_id', token.data[0].iPassengerId)
                     .set('type', 'passenger') });*/
         }
-        console.log(request)
         if (!request.headers.has('Content-Type')) {
-            console.log(request.headers)
             request = request.clone({ headers: request.headers.set('Content-Type', 'application/json') });
         }
 
@@ -49,7 +45,6 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             map((event: HttpEvent<any>) => {
                 this.spinner.hide();
-                console.log(this.spinner.hide());
                 if (event instanceof HttpResponse) {
                     //console.log('event--->>>', event);
                 }

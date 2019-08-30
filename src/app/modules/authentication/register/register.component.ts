@@ -103,7 +103,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
         const val = this.registerForm.value;
         this.router.navigateByUrl('/auth/register/verify');
-        console.log(val)
         this.dataService.changeData(val.vMobileNumber);
         this.auth.register(val)
             .pipe(

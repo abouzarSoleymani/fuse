@@ -11,14 +11,12 @@ import 'hammerjs';
 
 import { FuseModule } from '@fuse/fuse.module';
 import { FuseSharedModule } from '@fuse/shared.module';
-import { FuseProgressBarModule, FuseSidebarModule, FuseThemeOptionsModule } from '@fuse/components';
+import { FuseProgressBarModule } from '@fuse/components';
 
 import { fuseConfig } from 'app/fuse-config';
 
 import { AppComponent } from 'app/app.component';
-import { LayoutModule } from 'app/layout/layout.module';
 import {SharedModule} from 'app/shared/shared.module';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {environment} from '@env/environment';
 import {AppRoutingModule} from 'app/app-routing.module';
 import {StoreModule} from '@ngrx/store';
@@ -32,12 +30,20 @@ import {CustomSerializer} from 'app/shared/utils';
 import {AuthenticationModule} from 'app/modules/authentication/authentication.module';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 import {HttpConfigInterceptor} from 'app/core/service/httpconfig.interceptor';
+import {MainComponent} from 'app/modules/main/main/main.component';
+import {WaitingNearDriverComponent} from 'app/shared/waiting-near-driver/waiting-near-driver.component';
 
+const D_COMPONENTS: any = [
+    AppComponent,
+    WaitingNearDriverComponent
+];
+const E_COMPONENTS: any = [
+    WaitingNearDriverComponent
+];
 
 @NgModule({
-    declarations: [
-        AppComponent
-    ],
+    declarations:
+        D_COMPONENTS,
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -45,22 +51,13 @@ import {HttpConfigInterceptor} from 'app/core/service/httpconfig.interceptor';
         AppRoutingModule,
         SweetAlert2Module.forRoot(),
         TranslateModule.forRoot(),
-        // Material moment date module
-        MatMomentDateModule,
-
-        // Material
-        MatButtonModule,
-        MatIconModule,
 
         // Fuse modules
         FuseModule.forRoot(fuseConfig),
         FuseProgressBarModule,
         FuseSharedModule,
-        FuseSidebarModule,
-        FuseThemeOptionsModule,
 
         // App modules
-        LayoutModule,
         SharedModule,
         AuthenticationModule,
         StoreModule.forRoot(reducers, {metaReducers}),
@@ -69,6 +66,8 @@ import {HttpConfigInterceptor} from 'app/core/service/httpconfig.interceptor';
         StoreRouterConnectingModule.forRoot({stateKey: 'router'}),
         LeafletModule.forRoot(),
     ],
+    entryComponents: E_COMPONENTS,
+
     providers: [AuthGuard,
         { provide: RouterStateSerializer, useClass: CustomSerializer },
         { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }

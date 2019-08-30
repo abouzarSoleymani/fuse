@@ -1,0 +1,44 @@
+<h2 mat-dialog-title>{{description}}</h2>
+
+<mat-dialog-content [formGroup]="form" dir="rtl">
+
+        <mat-slide-toggle
+            class="example-margin"
+            [color]="color"
+            [checked]="checked"
+            [disabled]="disabled">
+           رفت و برگشت
+        </mat-slide-toggle>
+    <hr>
+    <button mat-stroked-button [disabled]="!secondDestination"  fxFlex="98" ><span>انتخاب مقصد دوم</span>
+        <mat-icon  class="mat-icon" aria-hidden="true">map</mat-icon>
+    </button>
+    <hr>
+    <mat-form-field appearance="outline" fxFlex="98">
+        <mat-label>توقف در مسیر</mat-label>
+        <mat-select [formControl]="selected" #thisSelect (click)="getWaitTypesList($event)" placeholder="زمان"  >
+            <ng-container *ngIf="waitTypes !== null && waitTypes.length && (!isLoading); else loading">
+                <mat-option *ngFor="let wType of waitTypes" [value]="wType">
+                    {{wType?.vTitle}}
+                </mat-option>
+            </ng-container>
+            <ng-template #loading>
+                <mat-option disabled>
+                    <div class="container">
+                        <span>در حال بارگذاری...</span>
+                        <mat-spinner class="spinner" diameter="20"></mat-spinner>
+                    </div>
+                </mat-option>
+            </ng-template>
+        </mat-select>
+        <mat-icon matSuffix class="secondary-text">access_time</mat-icon>
+    </mat-form-field>
+    <hr>
+    <div><span class="title"> هزینه سفر شما :</span><span> 600000 ریال</span></div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button class="mat-raised-button"(click)="close()">انصراف</button>
+    <button class="mat-raised-button mat-primary"(click)="save()">ثبت</button>
+</mat-dialog-actions>

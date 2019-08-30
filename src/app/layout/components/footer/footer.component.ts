@@ -4,6 +4,9 @@ import {GeocodingService} from 'app/modules/main/map/geocoding.service';
 import {RideOptionService} from 'app/layout/components/footer/rideOption.service';
 import {ErrorDialogService} from 'app/core/service/errordialog.service';
 import Swal from "sweetalert2";
+import {LocalStorageService} from 'app/core/service/local-storage.service';
+import {FormControl, Validators} from '@angular/forms';
+import {FuseConfigService} from '@fuse/services/config.service';
 
 @Component({
     selector   : 'footer',
@@ -12,25 +15,19 @@ import Swal from "sweetalert2";
 })
 export class FooterComponent implements OnInit
 {
-    public slides = [
-        {image: '../../../../assets/images/vehicles/box.png', title: 'موتور ویژه مرسولات'},
-        {image: '../../../../assets/images/vehicles/box.png', title: 'موتور ویژه مرسولات'},
-        {image: '../../../../assets/images/vehicles/rose.png', title: 'ویژه بانوان'},
-        {image: '../../../../assets/images/vehicles/rose.png', title: 'ویژه بانوان'},
-        {image: '../../../../assets/images/vehicles/eco.png', title: 'به صرفه و فوری'},
-        {image: '../../../../assets/images/vehicles/eco.png', title: 'به صرفه و فوری'},
-    ];
     public disabled: boolean = false;
     vehicles;
-    @ViewChild('voucherCode', {static: true}) voucherCode: ElementRef;
+    @ViewChild('voucherCode', {static: false}) voucherCode: ElementRef;
     allowVehicleActived;
     rideOptions = false;
     discountOptions = false;
     secondDestination = false;
     roundTrip = false;
     waiting = false;
-    waitTypes;
+    waitTypes = [];
     index;
+    price;
+    isLoading = false;
     @ViewChild('SwiperDirective', { static: false }) directiveRef?: SwiperDirective;
 
     public config: SwiperConfigInterface = {
@@ -46,6 +43,7 @@ export class FooterComponent implements OnInit
         centeredSlides: true,
         pagination: false,
         slideToClickedSlide: true,
+        initialSlide: 0,
         breakpoints: {
             1024: {
                 slidesPerView: 4,
@@ -67,60 +65,60 @@ export class FooterComponent implements OnInit
     };
 
     constructor(private geocoder: GeocodingService,
-                private rideOptionsService: RideOptionService,
-                private errorDialog: ErrorDialogService)
+                private rideOptionService: RideOptionService,
+                private errorDialog: ErrorDialogService,
+                private localStorage: LocalStorageService,
+                private _fuseConfigService: FuseConfigService)
     {
     }
 
     ngOnInit(): void {
-        this.rideOptionsService.getWaitTypeList().subscribe(
+
+
+
+            this.geocoder.allVehiclesAvalible.subscribe(
+                (data: any) => {
+                        this.vehicles = data;
+                        if(this.vehicles.length > 0)
+                        this.setSelectedVehicle(this.vehicles.find( (data) => {
+                            return data.eAllow == 'Yes';
+                        }))
+                    /*           0:
+                eAllow: "Yes"
+                eIsDefault: "Yes"
+                eVehicleUse: "Taxi"
+                iVehicleTypeId: 3
+                vAmount: 60000
+                vVehicleIcon: "http://minetaxi.ir/portal/web/uploads/vehicle_type/5be7c6f78fbac.png"
+                vVehicleName: "اتو ماین"
+                1:
+                eAllow: "Yes"
+                eIsDefault: "No"
+                eVehicleUse: "Motor"
+                iVehicleTypeId: 6
+                vAmount: 75000
+                vVehicleIcon: "http://minetaxi.ir/portal/web/uploads/vehicle_type/5be7c748d71b8.png"
+                vVehicleName: "موتو ماین"*/
+                }
+            )
+
+        this.rideOptionService.getFareAmount().subscribe(
             (data) => {
-                console.log(data);
-                this.waitTypes = data.data;
-                /*  0:
-                    WaitTypeId: 1
-                    vDesc: ""
-                    vPrice: 5
-                    vTitle: "۲ تا ۵ دقیقه"*/
-                this.errorDialog.openDialog(data.settings.message, data.settings.success, 'console');
-            }
-        );
-
-        this.geocoder.allVehiclesAvalible.subscribe(
-            (data) =>{
-                this.vehicles = data;
-                this.allowVehicleActived = this.vehicles.find( (data) => {
-                    return data.eAllow == 'Yes';
-                })
-
-                console.log(this.allowVehicleActived);
-                console.log(this.vehicles)
-                /*           0:
-            eAllow: "Yes"
-            eIsDefault: "Yes"
-            eVehicleUse: "Taxi"
-            iVehicleTypeId: 3
-            vAmount: 60000
-            vVehicleIcon: "http://minetaxi.ir/portal/web/uploads/vehicle_type/5be7c6f78fbac.png"
-            vVehicleName: "اتو ماین"
-            1:
-            eAllow: "Yes"
-            eIsDefault: "No"
-            eVehicleUse: "Motor"
-            iVehicleTypeId: 6
-            vAmount: 75000
-            vVehicleIcon: "http://minetaxi.ir/portal/web/uploads/vehicle_type/5be7c748d71b8.png"
-            vVehicleName: "موتو ماین"*/
+                this.price = data;
             }
         )
-
     }
 
-    getPriceEstimate(vehicle){
+    setSelectedVehicle(vehicle){
+        this.roundTrip = false;
+        this.secondDestination = false;
+        this.localStorage.updateItem('ride',{iVehicleTypeId : vehicle.iVehicleTypeId.toString()});
+        this.localStorage.updateItem('ride',{eVehicleUse : vehicle.eVehicleUse.toString()});
         this.allowVehicleActived = vehicle;
+        this.rideOptionService.setFareAmount(vehicle.vAmount);
     }
     indexOnChange(event){
-        setTimeout( ()=>{
+        setTimeout( ()=> {
             console.log(this.directiveRef)
         }, 1000)
     }
@@ -138,30 +136,70 @@ export class FooterComponent implements OnInit
     }
     setSecondDestination(){
      this.secondDestination = !this.secondDestination;
+        this.rideOptionService.secondDestination(this.secondDestination);
+        this.rideOptions = !this.rideOptions;
     }
     setRoundTrip(){
         this.roundTrip = !this.roundTrip;
+        this.localStorage.updateItem('ride', {vSweep: this.roundTrip ? '1' : '0'})
+        this.rideOptionService.getPassengerEstimateFare();
     }
     setWaiting(){
         this.waiting = !this.waiting;
     }
-    checkVoucher(){
-        console.log(this.voucherCode.nativeElement.value)
-        if(!this.voucherCode.nativeElement.value){
-            Swal.fire({
-                position: 'top-end',
-                type: 'error',
-                title: 'لطفا کد تخفیف را وارد نمایید',
-                showConfirmButton: false,
-                timer: 1500
-            })
+    checkVoucherInput(){
+        let vCode = this.voucherCode.nativeElement.value;
+        if(!vCode){
+            this.errorDialog.openDialog('لطفا کد تخفیف را وارد نمایید', 2, 'alert');
             return;
         }
-        console.log(this.voucherCode.nativeElement.value)
-        /*        this.rideOptionsService.getPassengerValidateVoucher().subscribe(
-                    (data) => {
-                        console.log(data)
-                    }
-                )*/
+        this.rideOptionService.checkVoucher(vCode)
     }
+    confirmRide(){
+        this.rideOptionService.emmitWaiting.next(true);
+        this.rideOptionService.getPassengerConfirmRide().subscribe(
+            (data) => {
+                if(data.data && data.data.length>0){
+                    this.localStorage.updateItem('ride', {iRideRequestId: data.data[0].iRideRequestId.toString()})
+                    this.rideOptionService.getIntervalRidePath();
+                }
+                this.errorDialog.openDialog(data.settings.message, data.settings.success, 'console');
+            })
+    }
+
+
+
+
+
+
+    getWaitTypesList(){
+        this.isLoading = true;
+            this.rideOptionService.getWaitTypeList().subscribe(
+                (data) => {
+                    this.isLoading = false;
+                    this.waitTypes = data.data;
+                    /*  0:
+                        WaitTypeId: 1
+                        vDesc: ""
+                        vPrice: 5
+                        vTitle: "۲ تا ۵ دقیقه"*/
+                    this.errorDialog.openDialog(data.settings.message, data.settings.success, 'console');
+                }
+            );
+    }
+    selectedWaitList(event){
+        this.localStorage.updateItem('ride', {vWaitType: event.value.WaitTypeId })
+        this.rideOptionService.getPassengerEstimateFare()
+    }
+
+/*    openChanged(event) {
+        this.isOpen = event;
+        this.isLoading = event;
+/!*        if (event) {
+            this.savedValue = this.selected.value;
+            this.selected.reset();
+        }*!/
+    }*/
+
+
 }

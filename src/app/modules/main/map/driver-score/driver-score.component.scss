@@ -1,0 +1,59 @@
+
+main {
+    min-height: 100vh;
+    min-width: 100vw;
+    background: white;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, white, white);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, white, white); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    .mat-toolbar {
+        background: inherit;
+        color: inherit;
+        box-shadow: 0px -1px 1px -1px rgba(0, 0, 0, 0.2), 0px 0px 1px 0px rgba(0, 0, 0, 0.14), 0px -1px 3px 0px rgba(0, 0, 0, 0.12);
+    }
+    .mat-toolbar-single-row{
+        padding: 0px;
+    }
+    &.above {
+        position: relative;
+        z-index: 99;
+    }
+    .content-top{
+        padding-top: 3.3rem;
+        text-align: center;
+        .desc{
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+    }
+}
+.request-taxi{
+    height: 36px;
+}
+.request-center-btn{
+    font-size: 0.9em;
+}
+
+.driver-ride-options{
+    height: auto;
+    font-size: 0.7em;
+    border: solid 1px #cccccc;
+    .driver-ride-detail{
+        border-left: solid 1px #5c5c5c;
+    }
+}
+.title{
+    font-weight: bold;
+    font-size: 0.9em;
+    color:#0E2A3B;
+}
+.score-card {
+    margin: 1.2rem;
+    text-align: center;
+}
+
+.score-header {
+    justify-content: center;
+}
+.score-card-buttons{
+    padding: 0.5rem;
+}

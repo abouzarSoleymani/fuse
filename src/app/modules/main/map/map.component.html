@@ -1,25 +1,26 @@
-<div id="map" class="page-layout blank">
-    <div class="content">
-        <div style="position: absolute;
-    left: 0px;
-    height: 100%;
-    width: 100vw;
-    outline: none;
-    right: 0;
-    top: 0;"
-             leaflet
-             *ngIf="isOnBrowser"
-             [leafletOptions]="options"
-             (leafletMapReady)="onMapReady($event)"
-             [leafletLayers]="markers"
-             [(leafletCenter)]="mapCenter"
-             [leafletZoomOptions]="mapZoom"
-            >
-<!--
-            (leafletClick) = 'leafletClick($event)'
--->
-        </div>
+<template #waitingNearDriver>
+</template>
+<template #driverScore>
+</template>
 
-    </div>
+<div class="page-layout simple fullwidth" >
+    <!-- CONTENT -->
+    <template #driverDetail>
+    </template>
+        <div class="content" fusePerfectScrollbar>
+                <div class="map-container">
+                    <img *ngIf="iconImage != ''" class="map-marker-centered" src="{{iconImage}}" (click)="addNewMarker()">
+                         <div id="map-taxi"
+                             leaflet
+                             *ngIf="isOnBrowser"
+                             [leafletOptions]="options"
+                             (leafletMapReady)="onMapReady($event)"
+                             [leafletLayers]="markers"
+                             [(leafletCenter)]="mapCenter"
+                             [leafletZoomOptions]="mapZoom"
+                            >
+                          </div>
+                 </div>
+        </div>
 
 </div>

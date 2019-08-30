@@ -6,7 +6,7 @@ import {
     Inject,
     PLATFORM_ID,
     Renderer2,
-    ViewEncapsulation
+    ViewEncapsulation, ViewChild, ViewContainerRef, ComponentFactoryResolver
 } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import {icon, latLng, LatLngExpression, marker, MarkerOptions, tileLayer} from 'leaflet';
@@ -25,7 +25,13 @@ import {isLoggedIn} from 'app/modules/authentication/auth.selectors';
 import {LocalStorageService} from 'app/core/service/local-storage.service';
 import {ResponseApiModel} from 'app/model/responseApi.model';
 import {Marker} from 'app/model/marker.model';
+import {RideOptionService} from 'app/layout/components/footer/rideOption.service';
+import {WaitingNearDriverComponent} from 'app/shared/waiting-near-driver/waiting-near-driver.component';
+import {DriverDetailComponent} from 'app/modules/main/map/driver-detail/driver-detail.component';
 declare let L;
+import 'leaflet-rotatedmarker';
+import {first} from 'rxjs/operators';
+import {DriverScoreComponent} from 'app/modules/main/map/driver-score/driver-score.component';
 
 
 @Component({
@@ -38,14 +44,19 @@ declare let L;
 })
 export class MapComponent implements OnInit{
 
+    @ViewChild('waitingNearDriver', { read: ViewContainerRef, static: false}) waitingDriverEntry: ViewContainerRef;
+    @ViewChild('driverDetail', { read: ViewContainerRef, static: false}) DriverDetailEntry: ViewContainerRef;
+    @ViewChild('driverScore', { read: ViewContainerRef, static: false}) DriverScoreEntry: ViewContainerRef;
+    componentRef: any;
+
     isOnBrowser=false;
     currentmarker;
-    vehicleMarkers: any[] = [];
     address;
     map;
     mapCenter;
     user: ResponseApiModel<any>;
-    layerGroupVehicles =  L.layerGroup();
+
+    iconImage = 'assets/images/map/source.png';
     currentLocationIconUrl = 'assets/images/map/my_location_icon.png';
     pinSourceIconUrl = 'assets/images/map/source.png';
     pinDestination1IconUrl = 'assets/images/map/destination1.png';
@@ -55,6 +66,7 @@ export class MapComponent implements OnInit{
     selectedAddress = {lat: '', lng: '', address: ''};
     markers: Marker [] = [];
     options = {
+        noMoveStart: true,
         layers: [
             tileLayer('https://api.cedarmaps.com/v1/tiles/cedarmaps.streets/{z}/{x}/{y}.png?access_token=d058bfc14a9d1305de1dbabd7161f67cd2f37933'),
         ],
@@ -73,8 +85,9 @@ export class MapComponent implements OnInit{
                 private _fuseSidebarService: FuseSidebarService,
                 private apiCall: ApiCallService,
                 private localStorage: LocalStorageService,
-                private errorDialog: ErrorDialogService) {
-
+                private errorDialog: ErrorDialogService,
+                private resolver: ComponentFactoryResolver,
+                private rideOptionService: RideOptionService){
         if (isPlatformBrowser(this.platformId)) {
             this.isOnBrowser=true;
         }
@@ -89,7 +102,7 @@ export class MapComponent implements OnInit{
                     hidden: false
                 },
                 footer   : {
-                    hidden: false
+                    hidden: true
                 },
                 sidepanel: {
                     hidden: true
@@ -99,103 +112,139 @@ export class MapComponent implements OnInit{
     }
 
 
+    createDriverScoreComponent() {
+        this.DriverScoreEntry.clear();
+        const factory = this.resolver.resolveComponentFactory(DriverScoreComponent);
+        this.componentRef = this.DriverScoreEntry.createComponent(factory);
+    }
+    createDriverDetailComponent() {
+        this.DriverDetailEntry.clear();
+        const factory = this.resolver.resolveComponentFactory(DriverDetailComponent);
+        this.componentRef = this.DriverDetailEntry.createComponent(factory);
+    }
+    createWaitingNearDriverComponent() {
+        this.waitingDriverEntry.clear();
+        const factory = this.resolver.resolveComponentFactory(WaitingNearDriverComponent);
+        this.componentRef = this.waitingDriverEntry.createComponent(factory);
+    }
+    destroyComponent() {
+        this.componentRef.destroy();
+    }
+
     onMapReady(map) {
         this.map = map;
         this.myLocationIcon();
-        this.layerGroupVehicles.addTo(this.map);
-
+        this.geocoder.resetMarkers();
+        this.checkState();
+        this.geocoder.layerGroupVehicles.addTo(this.map);
         this.searchCurrentLocation();
-        this.geocoder.resetMArkers();
-        this.addNewMarker(null);
+      //  this.addNewMarker(null);
         this.search();
-        this.mapMove();
-
+      //  this.mapMove();
+        this.mapDragged();
+        this.rideOptionService.getIntervalRidePath();
 
     }
     getCenterMarker(){
-        this.currentmarker.setLatLng(this.map.getCenter());
+       // this.geocoder.getLastMarker().setLatLng(this.map.getCenter());
     }
-    mapMove(){
+/*    mapMove(){
         this.map.on('move', (e) => {
-            if(!this.geocoder.freezMarkers)
-                this.getCenterMarker();
+            if(this.geocoder.getMarkers().length == 1)
+                this.geocoder.getPassengerNearByDriver(this.map.getCenter());
+      })
+    }*/
+    mapDragged(){
+        this.map.on('dragend', (e) => {
+             setTimeout( () => {
+                if(this.geocoder.getMarkers().length == 0){
+                    this.geocoder.getPassengerNearByDriver(this.map.getCenter());
+                }
+            }, 2000);
         });
-
-            this.map.on('moveend', (e) =>{
-                setTimeout( () => {
-                    if(this.geocoder.getMarkers().length == 1){
-                        this.getPassengerNearByDriver(this.map.getCenter());
-                    }
-                }, 2000)
-            })
-
-
     }
     addNewMarker(location){
-                let iconUrl;
-                console.log(this.geocoder.getMarkers().length)
-                let latlng = location == null ||  location == undefined ? '': location;
-                //  if(!this.isFreeMarker()){
-                if(this.geocoder.getMarkers().length === 0)
-                iconUrl =  this.pinSourceIconUrl;
-                else if(this.geocoder.getMarkers().length === 1)
-                iconUrl = this.pinDestination1IconUrl;
 
-                console.log(iconUrl, latlng)
-                this.createMarker(iconUrl, latlng);
-                // }
-                //   if(!this.isFreeMarker())
+            let iconUrl;
+            let latlng = location == null ||  location == undefined ? this.map.getCenter(): location;
+         //this.geocoder.getLastMarker().setLatLng(latlng);
+        if(this.geocoder.getMarkers().length === 0) {
+            iconUrl = this.pinSourceIconUrl;
+        } else if(this.geocoder.getMarkers().length === 1)
+                iconUrl = this.pinDestination1IconUrl;
+            else if(this.geocoder.getMarkers().length == 2)
+                iconUrl = this.pinDestination2IconUrl;
+        this.createMarker(iconUrl, latlng);
+        //  if(!this.isFreeMarker()){
+        this.geocoder.upDownRideState('up');
+        // }
+            //   if(!this.isFreeMarker())
 
     }
 
 
     isFreeMarker(){
-        if(this.geocoder.getMarkers().length < 2 ){
-
-            //  this.routing();
-            return true;
+        if((this.geocoder.getMarkers().length == 2 && this.geocoder.thirdMarker == false) || this.geocoder.getMarkers().length == 3){
+            return false;
         }
-        return false;
+        return true;
     }
 
     createMarker(iconUrl, location){
-        console.log(iconUrl, location)
-        console.log(this.geocoder.getMarkers().length)
-        const newMarker = 
-
+        const newMarker =
             marker(
-            this.geocoder.getMarkers().length == 0 ? this.map.getCenter(): [ location.lat , location.lng],
+             [ location.lat , location.lng],
             {
                 interactive: true,
-                draggable: false,
+                 draggable: false,
                 icon: icon({
                     className: 'pin',
                     iconSize: [ 50, 70 ],
                     iconAnchor: [25, 70],
                     iconUrl: iconUrl,
-                    shadowUrl: this.shadowUrl,
+                   // shadowUrl: this.shadowUrl,
                 })
             }
-        ).on('click', (event: any) => {
-            this.geocoder.getMarkers()[this.geocoder.getMarkers().length - 1].options.freez = true;
-            if(this.isFreeMarker()) {
-                this.geocoder.getMarkers()[this.geocoder.getMarkers().length - 1].setLatLng(event.latlng);
+        );
+           //     .on('click', (event: any) => {
+                //this.map.invalidateSize()
+       /*         if(this.geocoder.getLocations().length < 2 || (this.geocoder.getLocations().length == 2 && this.geocoder.getMarkers().length == 3 )){
+                    this.geocoder.upDownRideState('up')
+                    this.geocoder.setLocations(event.latlng);
+                    this.geocoder.getLastMarker().setLatLng(event.latlng);
 
-                this.addNewMarker(event.latlng)
-            }else{
-                this.geocoder.freezMarkers = true;
-                    this.fitBound();
-                    this.hiddenFooter(false);
-                    this.geocoder.estimateFare();
-            }
+                }*/
+              //  this.addNewMarker(event.latlng)
+      //  })
 
-        })
         this.geocoder.setMarker(newMarker);
-        console.log(this.geocoder.getMarkers())
-        this.currentmarker = this.geocoder.getMarkers()[this.geocoder.getMarkers().length - 1];
-        console.log(this.currentmarker)
+        this.changeImageIcon();
+        if(!this.isFreeMarker()){
+            this.geocoder.freezMarkers = true;
+            this.fitBound();
+            this.geocoder.hiddenFooter(false);
+            if(this.geocoder.getMarkers().length == 2)
+                this.geocoder.estimateFare();
+            else if(this.geocoder.getMarkers().length == 3)
+                this.rideOptionService.getPassengerEstimateFare();
+        }
+       // this.currentmarker = this.geocoder.getMarkers()[this.geocoder.getMarkers().length - 1];
     }
-
+    changeImageIcon(){
+        if(this.geocoder.getMarkers().length == 0){
+            this.iconImage = this.pinSourceIconUrl;
+        }
+        else if(this.geocoder.getMarkers().length == 1){
+            this.iconImage = this.pinDestination1IconUrl;
+        }
+        else if(this.geocoder.getMarkers().length == 2 && this.geocoder.thirdMarker == true){
+            this.iconImage = this.pinDestination2IconUrl;
+        }
+        else  if((this.geocoder.getMarkers().length == 2 && this.geocoder.thirdMarker == false ) || this.geocoder.getMarkers().length == 3)
+        {
+            this.iconImage = '';
+        }
+    }
     myLocationIcon(){
         let pin = L.control({position: 'topleft'});
         pin.onAdd = () => {
@@ -206,7 +255,7 @@ export class MapComponent implements OnInit{
       </div>`;
             L.DomEvent
                 .addListener(div, 'click', L.DomEvent.stopPropagation)
-                .addListener(div, 'click', L.DomEvent.preventDefault)
+                .addListener(div, 'click', L.DomEvent.preventDefault);
             div.id = 'my-location';
             return div;
         };
@@ -215,119 +264,102 @@ export class MapComponent implements OnInit{
         let pinId = document.getElementById('my-location');
         this.renderer.listen(pinId, 'click', (event) => {
             this.searchCurrentLocation();
-        })
+        });
     }
 
 
     ngOnInit(): void {
-        console.log(this.geocoder.getClientLocation());
+
+        this.geocoder.changeMapSize.subscribe(
+            (data) => {
+                if(data)
+                this.map.invalidateSize();
+            }
+        );
         this.geocoder.markersChanged.subscribe(
             (data: any) =>{
-                this.markers = data;
+                this.markers = this.geocoder.getMarkers();
                 this.geocoder.freezMarkers = false;
             }
-        )
-        this.geocoder.isUnfreezMarkers.subscribe(
-            (data) =>{
-                console.log(data)
-                this.getCenterMarker();
-                this.hiddenFooter(true);
+        );
+        this.geocoder.emitChangePinUrl.subscribe(
+            (data: any) => {
+                if(data){
+                   this.changeImageIcon();
+                }
             }
-        )
+        );
+
+/*        this.geocoder.isUnfreezMarkers.subscribe(
+            (data) =>{
+                if(data){
+                   // this.getCenterMarker();
+                    this.geocoder.hiddenFooter(true);
+                }
+            }
+        );*/
+
+        this.rideOptionService.emmitAddNewMarker.subscribe(
+            (data) => {
+                this.geocoder.thirdMarker = true;
+               // this.addNewMarker(null);
+                this.changeImageIcon();
+              //  this.geocoder.isUnfreezMarkers.next(true);
+            }
+        );
+        this.rideOptionService.emmitWaiting.subscribe(
+            (data) => {
+                if(data){
+                    console.log(data)
+                    this.createWaitingNearDriverComponent();
+                }
+                else{
+                    this.destroyComponent();
+                }
+            }
+        );
+        this.rideOptionService.emmitDriverDetail.subscribe(
+            (data) => {
+                if(data){
+                    console.log(data)
+                    this.createDriverDetailComponent();
+                }
+                else{
+                    this.destroyComponent();
+                }
+            }
+        );
+        this.rideOptionService.emmitDriverScore.subscribe(
+            (data) => {
+                if(data){
+
+                    this.createDriverScoreComponent();
+                }
+                else{
+                    this.destroyComponent();
+                }
+            }
+        );
         setTimeout( () => {
             this._fuseSidebarService.getSidebar('navbar').toggleFold();
-        } , 500)
+           // this.geocoder.changeMapSize.next(true);
+        } , 5000);
     }
 
-    getPassengerNearByDriver(latLng){
-        let data = {
-            "iPassengerId": "",
-            "dSourceLatitude": latLng.lat,
-            "dSourceLongitude": latLng.lng
-        }
-
-        if(isLoggedIn){
-            this.user = this.localStorage.getItem('user');
-            data.iPassengerId = (this.user.data[0].iPassengerId).toString();
-            this.apiCall.getResponse('passenger_near_by_drivers', data).subscribe(
-                (data) =>{
-                    this.layerGroupVehicles.clearLayers();
-                    this.errorDialog.openDialog(data.settings.message, data.settings.success, 'console');
-                    if(data.data.length>0 && data.data[0].vehicle_type && data.data[0].vehicle_type.length > 0) {
-                        this.addVehicleToMap(data.data[0].vehicle_type);
-                    }
-                }
-            )
-        }
-    }
-
-    addVehicleToMap(vehicleType){
-        let vehType
-        let vehTypeNear;
-        this.vehicleMarkers = [];
-        for ( vehType of vehicleType){
-                //let icon = veh.vVehicleMapIcon;
-                if(vehType.near_by_drivers && vehType.near_by_drivers.length>0){
-                    for(vehTypeNear of vehType.near_by_drivers){
-                        console.log(vehTypeNear)
-                        console.log(vehType.vVehicleMapIcon)
-                        this.vehicleMarkers.push(vehTypeNear);
-                    }
-                    this.vehiclesOnMap(vehType);
-                }
-
-            }
-/*       this.vehicleMarkers = [
-            [35.72634284417815, 51.46245002746583],
-            [35.73634284417815, 51.47245002746583],
-            [35.70634284417815, 51.44245002746583]
-        ];
-        for(let vehs of this.vehicleMarkers){
-            let i = Math.floor(Math.random() * Math.floor(3));
-            vehs[0] = '35.7'+ i+ '634284417815';
-                vehs[1] = '51.4'+ i + '245002746583';
-                console.log( vehs[0],  vehs[1])
-            }*/
-         //   console.log(vehTypeNear, vehType)
-       // this.vehiclesOnMap(vehTypeNear, vehType)
-        //  this.map.setView(data, 14, {animate: true})
-    }
-    vehiclesOnMap(vehType){
-        console.log(vehType)
-        console.log(this.layerGroupVehicles)
-        console.log(this.vehicleMarkers)
-        for (let i = 0; i < this.vehicleMarkers.length; i++) {
-            var markers = marker(
-                [this.vehicleMarkers[i].fDriverLatitude, this.vehicleMarkers[i].fDriverLongitude],
-                {
-                    interactive: false,
-                    draggable: false,
-                    icon: icon({
-                        className: 'vehicle-icons',
-                        iconSize: [25, 40],
-                        iconAnchor: [12, 45],
-                        iconUrl: vehType.vVehicleMapIcon,
-                    })
-                }
-            );
-            this.layerGroupVehicles.addLayer(markers);
-        }
 
 
-   //     [vehTypeNear.fDriverLatitude, vehTypeNear.fDriverLongitude],
-   //     iconUrl: vehType.vVehicleMapIcon,
 
-    }
+
     setAddress(location){
         this.http.get(`https://pm2.parsimap.com/comapi.svc/areaInfo/${location.lat}/${location.lng}/18/1/84785dc1-9106-4bd2-a400-770acb187fa4/1`).subscribe(
             (data:any) => {
               //  this.setMarker(location)
-                this.setAddressData.emit({lat: location.lat, lng: location.lng, address: data.limitedFullAddress})
+                this.setAddressData.emit({lat: location.lat, lng: location.lng, address: data.limitedFullAddress});
                 this.selectedAddress.lat = location.lat;
                 this.selectedAddress.lng = location.lng;
                 this.selectedAddress.address = data.limitedFullAddress;
             }
-        )
+        );
     }
 
     searchCurrentLocation() {
@@ -346,17 +378,14 @@ export class MapComponent implements OnInit{
                             })
                         }
                     ).addTo(this.map);
-                    this.map.setView(data, 14, {animate: true})
+                    this.map.setView(data, 14, {animate: true});
                 });
       }
 
 
 
 
-      hiddenFooter(status){
-          let config = {layout: {footer : { hidden: status}}};
-          this._fuseConfigService.setConfig( config )
-      }
+
       fitBound(){
             let markers = this.geocoder.getMarkers();
           let  bounds = new L.LatLngBounds(markers[0]._latlng, markers[1]._latlng);
@@ -397,6 +426,30 @@ export class MapComponent implements OnInit{
             minLength: 2,
             autoCollapse: true,
         }) );
+    }
+
+    checkState(){
+        let rideStatesModel = this.localStorage.getItem('ride');
+        if(rideStatesModel.choiseState == 0)
+            return;
+        if(rideStatesModel.choiseState == 1){
+            this.geocoder.setLocations({lat: rideStatesModel.dSourceLatitude, lng: rideStatesModel.dSourceLongitude});
+            this.addNewMarker({lat: rideStatesModel.dSourceLatitude, lng: rideStatesModel.dSourceLongitude});
+          //  this.geocoder.isUnfreezMarkers.next(true);
+        }
+        if(rideStatesModel.choiseState == 2){
+            this.addNewMarker({lat: rideStatesModel.dSourceLatitude, lng: rideStatesModel.dSourceLongitude});
+            this.geocoder.setLocations({lat: rideStatesModel.dSourceLatitude, lng: rideStatesModel.dSourceLongitude});
+            this.addNewMarker({lat: rideStatesModel.dDestinationLatitude, lng: rideStatesModel.dDestinationLongitude});
+            this.geocoder.setLocations({lat: rideStatesModel.dDestinationLatitude, lng: rideStatesModel.dDestinationLongitude});
+        }
+    }
+
+    ngAfterViewInit(): void {
+     //   this.rideOptionService.emmitDriverScore.next(true);
+  //      this.rideOptionService.emmitWaiting.next(true);
+    //    this.rideOptionService.emmitDriverDetail.next(true);
+   //     this.rideOptionService.openDialogTravelOptions();
     }
 
 

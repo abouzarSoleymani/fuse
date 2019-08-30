@@ -174,6 +174,6 @@ export class ToolbarComponent implements OnInit, OnDestroy
         this.store.dispatch(new Logout());
     }
     backState(){
-        this.geocoder.unFreezMarker();
+        this.geocoder.backStateMap();
     }
 }

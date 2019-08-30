@@ -54,7 +54,6 @@ export class VerifyCodeComponent implements OnInit, OnDestroy {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
         dataService.currentData.subscribe(data => this.vMobileNumber = data);
-        console.log(this.vMobileNumber);
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -92,7 +91,6 @@ export class VerifyCodeComponent implements OnInit, OnDestroy {
 
         const val = this.verifyCodeForm.value;
         val.vMobileNumber = this.vMobileNumber;
-        console.log(val);
         this.auth.verify(val)
             .pipe(
                 tap((data: ResponseApiModel<any>) => {

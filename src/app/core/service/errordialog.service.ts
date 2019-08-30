@@ -10,15 +10,17 @@ export class ErrorDialogService {
         if(typeDialog == 'console'){
                 console.log(data);
         }else{
-            if(success == 1){
+            if(success == 1){      //success
                 Swal.fire({
                     type: 'success',
                     text: data,
+                    confirmButtonText: 'باشه'
                 })
-            } else if(success == 2){
+            } else if(success == 2 || success == 0 ){    //error
                 Swal.fire({
                     type: 'error',
                     text: data,
+                    confirmButtonText: 'باشه'
                 })
             }
         }

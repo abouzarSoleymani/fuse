@@ -10,6 +10,7 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import {MatAccordion} from '@angular/material';
 import {ResponseApiModel} from 'app/model/responseApi.model';
 import {LocalStorageService} from 'app/core/service/local-storage.service';
+import {GeocodingService} from 'app/modules/main/map/geocoding.service';
 
 @Component({
     selector     : 'navbar-vertical-style-1',
@@ -40,7 +41,8 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
         private _fuseNavigationService: FuseNavigationService,
         private _fuseSidebarService: FuseSidebarService,
         private _router: Router,
-        private localStorage: LocalStorageService
+        private localStorage: LocalStorageService,
+        private geocoder: GeocodingService
     )
     {
         // Set the private defaults
@@ -158,6 +160,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
     toggleSidebarOpened(): void
     {
         this._fuseSidebarService.getSidebar('navbar').toggleOpen();
+      //  this.geocoder.changeMapSize.next(true);
     }
 
     /**
@@ -165,7 +168,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
      */
     toggleSidebarFolded(): void
     {
-        console.log(this._fuseSidebarService.getSidebar('navbar'))
         this._fuseSidebarService.getSidebar('navbar').toggleFold();
+       // this.geocoder.changeMapSize.next(true);
     }
 }

@@ -58,7 +58,7 @@
     "leaflet-rotatedmarker": "0.2.0",
     "leaflet-routing-machine": "3.2.12",
     "leaflet-search": "2.9.8",
-    "lodash": "4.17.11",
+    "lodash": "4.17.13",
     "moment": "2.24.0",
     "ng2-charts": "2.3.0",
     "ngrx-store-freeze": "0.2.4",

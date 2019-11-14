@@ -84,6 +84,36 @@ export class FuseThemeOptionsComponent implements OnInit, OnDestroy
                     hidden               : new FormControl(),
                     position             : new FormControl()
                 }),
+                toolbarTravelOptions  : this._formBuilder.group({
+                    background           : new FormControl(),
+                    customBackgroundColor: new FormControl(),
+                    hidden               : new FormControl(),
+                    position             : new FormControl()
+                }),
+                bodyWaitingNearDriver   : this._formBuilder.group({
+                    background           : new FormControl(),
+                    customBackgroundColor: new FormControl(),
+                    hidden               : new FormControl(),
+                    position             : new FormControl()
+                }),
+                bodyDriverScore   : this._formBuilder.group({
+                    background           : new FormControl(),
+                    customBackgroundColor: new FormControl(),
+                    hidden               : new FormControl(),
+                    position             : new FormControl()
+                }),
+                footerDriverDetail   : this._formBuilder.group({
+                    background           : new FormControl(),
+                    customBackgroundColor: new FormControl(),
+                    hidden               : new FormControl(),
+                    position             : new FormControl()
+                }),
+                footerDriverOptions   : this._formBuilder.group({
+                    background           : new FormControl(),
+                    customBackgroundColor: new FormControl(),
+                    hidden               : new FormControl(),
+                    position             : new FormControl()
+                }),
                 footer   : this._formBuilder.group({
                     background           : new FormControl(),
                     customBackgroundColor: new FormControl(),

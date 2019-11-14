@@ -10,12 +10,12 @@ import {Login} from '../auth.actions';
 import {tap} from 'rxjs/operators';
 import {AuthService} from 'app/modules/authentication/auth.service';
 import {Router} from '@angular/router';
-import {User} from 'app/model/user.model';
+import {User} from 'app/core/model/user.model';
 import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2';
-import {ResponseApiModel} from 'app/model/responseApi.model';
+import {ResponseApiModel} from 'app/core/model/responseApi.model';
 import {Ride} from 'app/modules/authentication/ride.actions';
-import {RideStatesModel} from 'app/model/rideStates.model';
+import {RideStatesModel} from 'app/core/model/rideStates.model';
 
 @Component({
     selector     : 'login',

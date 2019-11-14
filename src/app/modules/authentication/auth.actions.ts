@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import {ResponseApiModel} from 'app/model/responseApi.model';
+import {ResponseApiModel} from 'app/core/model/responseApi.model';
 
 
 

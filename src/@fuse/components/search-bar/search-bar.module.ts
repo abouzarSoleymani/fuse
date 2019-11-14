@@ -8,7 +8,7 @@ import { FuseSearchBarComponent } from './search-bar.component';
 
 @NgModule({
     declarations: [
-        FuseSearchBarComponent
+        FuseSearchBarComponent,
     ],
     imports     : [
         CommonModule,
@@ -18,7 +18,7 @@ import { FuseSearchBarComponent } from './search-bar.component';
         MatIconModule
     ],
     exports     : [
-        FuseSearchBarComponent
+         FuseSearchBarComponent,
     ]
 })
 export class FuseSearchBarModule

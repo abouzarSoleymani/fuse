@@ -1,6 +1,6 @@
-import {User} from 'app/model/user.model';
+import {User} from 'app/core/model/user.model';
 import {AuthActions, AuthActionTypes} from 'app/modules/authentication/auth.actions';
-import {ResponseApiModel} from 'app/model/responseApi.model';
+import {ResponseApiModel} from 'app/core/model/responseApi.model';
 
 
 export interface AuthState {

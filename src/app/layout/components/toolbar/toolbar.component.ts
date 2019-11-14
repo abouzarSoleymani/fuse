@@ -13,8 +13,9 @@ import {Login, Logout} from 'app/modules/authentication/auth.actions';
 import {LocalStorageService} from 'app/core/service/local-storage.service';
 import {Store} from '@ngrx/store';
 import {AppState} from 'app/reducers';
-import {ResponseApiModel} from 'app/model/responseApi.model';
-import {GeocodingService} from 'app/modules/main/map/geocoding.service';
+import {ResponseApiModel} from 'app/core/model/responseApi.model';
+import {GeocodingService} from 'app/core/service/geocoding.service';
+import {RideStateService} from 'app/core/service/rideState.service';
 
 @Component({
     selector     : 'toolbar',
@@ -50,7 +51,7 @@ export class ToolbarComponent implements OnInit, OnDestroy
         private router: Router,
         private store: Store<AppState>,
         private localStorage: LocalStorageService,
-        private geocoder: GeocodingService
+        private rideStateService: RideStateService
     )
     {
         // Set the defaults
@@ -174,6 +175,6 @@ export class ToolbarComponent implements OnInit, OnDestroy
         this.store.dispatch(new Logout());
     }
     backState(){
-        this.geocoder.backStateMap();
+        this.rideStateService.backStateMap();
     }
 }

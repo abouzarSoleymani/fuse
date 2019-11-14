@@ -1,0 +1,54 @@
+
+.plate-ui {
+    direction: rtl;
+   // background: #fff;
+    padding: .1em .5em .0em 1.5em;
+    font-size: 1.2em;
+    border: 1px solid #000;
+    position: relative;
+    display: inline-block;
+    border-radius: 3px;
+}
+.plate-1 span{
+    padding-left: 7px;
+    padding-right: 7px;
+    margin: .5em .0em .5em 0em;
+}
+.plate-ui:before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 100%;
+    background: #003399;
+    background-image: url(/assets/images/vehicles/plate.png);
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 3px 0 0 3px;
+    color: #ffffff;
+    font-size: 10px;
+    line-height: 60px;
+    padding-left: 1px;
+    background-position: 2px 6px;
+    background-size: 27px;
+    background-repeat: no-repeat;
+}
+
+.plate-ui:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0px;
+    width: 20px;
+    font-size: 10px;
+    line-height: 35px;
+    color: white;
+    padding-left: 1px;
+}
+.plate-1 {
+    float: left;
+    margin-right: 10px;
+    position: relative;
+    border-right: solid 1.5px;
+    margin-bottom: 2px;
+}

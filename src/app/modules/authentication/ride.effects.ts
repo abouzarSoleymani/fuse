@@ -5,8 +5,8 @@ import {tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {defer, of} from 'rxjs';
 import {LocalStorageService} from 'app/core/service/local-storage.service';
-import {RideStatesModel} from 'app/model/rideStates.model';
-import {ResponseApiModel} from 'app/model/responseApi.model';
+import {RideStatesModel} from 'app/core/model/rideStates.model';
+import {ResponseApiModel} from 'app/core/model/responseApi.model';
 
 
 @Injectable()

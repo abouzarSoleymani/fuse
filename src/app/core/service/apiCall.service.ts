@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import Swal from 'sweetalert2';
-import {User} from 'app/model/user.model';
+import {User} from 'app/core/model/user.model';
 import {Observable} from 'rxjs';
-import {ResponseApiModel} from 'app/model/responseApi.model';
+import {ResponseApiModel} from 'app/core/model/responseApi.model';
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 

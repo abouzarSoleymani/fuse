@@ -10,13 +10,16 @@ import {SwiperModule} from 'ngx-swiper-wrapper';
 import {MatProgressSpinnerModule} from '@angular/material';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import {ContentModule} from 'app/layout/components/content/content.module';
-import { DialogElementsExampleDialogComponent } from './dialog-elements-example-dialog/dialog-elements-example-dialog.component';
+import { DialogWaitingListComponent } from './dialog-waiting-list/dialog-waiting-list.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
 import { RadioButtonComponent } from './radio-button/radio-button.component';
 import { RadioGroupComponent } from './radio-group/radio-group.component';
 import { PassengerReasonsComponent } from './passenger-reasons/passenger-reasons.component';
-import { TravelOptionsComponent } from './travel-options/travel-options.component';
-import { ToolbarTravelOptionsComponent } from './toolbar-travel-options/toolbar-travel-options.component';
+import { DialogTravelOptionsComponent } from './dialog-travel-options/dialog-travel-options.component';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import { DialogVoucherCodeInputComponent } from './dialog-voucher-code-input/dialog-voucher-code-input.component';
+import { IranianPlateComponent } from './iranian-plate/iranian-plate.component';
+import { CallSupportReasonsComponent } from './call-support-reasons/call-support-reasons.component';
 
 
 
@@ -32,7 +35,8 @@ const I_MODULES = [
     SwiperModule,
     MatProgressSpinnerModule,
     NgxSpinnerModule,
-    ContentModule
+    ContentModule,
+    FlexLayoutModule
 
 
 ];
@@ -51,15 +55,19 @@ const E_MODULES = [
     ContentModule,
     StarRatingComponent,
     PassengerReasonsComponent,
-    TravelOptionsComponent,
-    ToolbarTravelOptionsComponent
+    DialogTravelOptionsComponent,
+    DialogVoucherCodeInputComponent,
+    IranianPlateComponent,
+    CallSupportReasonsComponent
+
+
 ];
 
 @NgModule({
     imports: I_MODULES,
     exports: E_MODULES,
-    entryComponents: [DialogElementsExampleDialogComponent, StarRatingComponent, PassengerReasonsComponent, TravelOptionsComponent,ToolbarTravelOptionsComponent],
-    declarations: [RtlSupportDirective, DialogElementsExampleDialogComponent, StarRatingComponent, RadioButtonComponent, RadioGroupComponent, PassengerReasonsComponent, TravelOptionsComponent, ToolbarTravelOptionsComponent]
+    entryComponents: [DialogWaitingListComponent, StarRatingComponent, PassengerReasonsComponent, DialogTravelOptionsComponent, DialogVoucherCodeInputComponent, IranianPlateComponent, CallSupportReasonsComponent],
+    declarations: [RtlSupportDirective, DialogWaitingListComponent, StarRatingComponent, RadioButtonComponent, RadioGroupComponent, PassengerReasonsComponent, DialogTravelOptionsComponent, DialogVoucherCodeInputComponent, IranianPlateComponent, CallSupportReasonsComponent, ]
 })
 export class SharedModule {
 }

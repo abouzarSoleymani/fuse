@@ -31,14 +31,12 @@ import {AuthenticationModule} from 'app/modules/authentication/authentication.mo
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 import {HttpConfigInterceptor} from 'app/core/service/httpconfig.interceptor';
 import {MainComponent} from 'app/modules/main/main/main.component';
-import {WaitingNearDriverComponent} from 'app/shared/waiting-near-driver/waiting-near-driver.component';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 const D_COMPONENTS: any = [
     AppComponent,
-    WaitingNearDriverComponent
 ];
 const E_COMPONENTS: any = [
-    WaitingNearDriverComponent
 ];
 
 @NgModule({
@@ -51,6 +49,7 @@ const E_COMPONENTS: any = [
         AppRoutingModule,
         SweetAlert2Module.forRoot(),
         TranslateModule.forRoot(),
+        FlexLayoutModule,
 
         // Fuse modules
         FuseModule.forRoot(fuseConfig),

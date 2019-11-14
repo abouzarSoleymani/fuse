@@ -1,13 +1,15 @@
-<div fxFlex fxLayout="row"  class="request-taxi" fxLayoutAlign="space-between center" >
+<div class="fuse-toolbar-travel-options">
+<div fxFlex fxLayout="row"  class="travel-options" fxLayoutAlign="space-between center" >
     <div  class="request-center-btn white cursor-hand" fxLayoutAlign="center center" fxFlex="35" (click)="checkVoucher()"  >
-        <span>کد تخفیف </span>
+        <span class="title">کد تخفیف </span>
         <mat-icon  class="mat-icon" aria-hidden="true">attach_money</mat-icon>
     </div>
     <div  class="driver-detail-top-price white"  fxFlex="30" fxLayoutAlign="center center"   >
-        <span>مبلغ : ۶۰۰۰۰ ریال</span>
+        <span class="title" >مبلغ : {{price}} ریال</span>
     </div>
     <div  class="request-center-btn white cursor-hand" fxLayoutAlign="center center" fxFlex="35" (click)="travelOptions()"  >
-        <span>گزینه های سفر</span>
+        <span class="title">گزینه های سفر</span>
         <mat-icon  class="mat-icon" aria-hidden="true">reorder</mat-icon>
     </div>
+</div>
 </div>

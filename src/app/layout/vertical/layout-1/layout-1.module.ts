@@ -24,7 +24,7 @@ import { VerticalLayout1Component } from 'app/layout/vertical/layout-1/layout-1.
         ContentModule,
         FooterModule,
         NavbarModule,
-        ToolbarModule
+        ToolbarModule,
     ],
     exports     : [
         VerticalLayout1Component

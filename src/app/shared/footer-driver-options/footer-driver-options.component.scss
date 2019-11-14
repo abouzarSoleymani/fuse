@@ -1,0 +1,68 @@
+:host{
+    font-size: 1.6rem;
+    z-index: 4;
+}
+.request-taxi{
+    height: 36px;
+
+    .request-center-btn{
+        font-weight: 600;
+        align-items: center;
+        vertical-align: middle;
+        line-height: normal;
+    }
+}
+.ride-options{
+    height: auto;
+    border: solid 1px #cccccc;
+
+    button{
+        padding: 0.3em;
+        margin: 0.5em;
+    }
+}
+.ride-options-btn {
+    height: 36px;
+
+    .ride-price {
+        border-left: solid 1px #cccccc;
+        border-right: solid 1px #cccccc;
+    }
+}
+.service-type {
+    padding: 5px;
+    img{
+        border: 3px solid #b9c0c8;
+        border-radius: 100%;
+        display: block;
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+        filter: gray; /* IE */
+        -webkit-filter: grayscale(1); /* Old WebKit */
+        -webkit-filter: grayscale(100%); /* New WebKit */
+        filter: grayscale(100%);
+    }
+    .description-active {
+        font-size: 0.65em;
+        font-weight: 600;
+        margin-top: 8px;
+        line-height: 20px;
+        vertical-align: middle;
+        color: #151f33;
+        text-align: center;
+        width: 100%;
+    }
+}
+.active-service{
+    img{
+        border: 3px solid #151f33 !important;
+        filter: none; /* IE */
+        -webkit-filter: grayscale(0); /* Old WebKit */
+        -webkit-filter: grayscale(0); /* New WebKit */
+        filter: grayscale(0);
+    }
+}
+.discount-form{
+    width: 90%;
+}

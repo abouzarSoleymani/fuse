@@ -1,6 +1,6 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {RideOptionService} from 'app/layout/components/footer/rideOption.service';
+import {RideOptionService} from 'app/core/service/rideOption.service';
 import {MatRadioChange} from '@angular/material';
 
 @Component({
@@ -11,7 +11,7 @@ import {MatRadioChange} from '@angular/material';
 export class PassengerReasonsComponent implements OnInit {
 
     @Output() radioChange?: EventEmitter<MatRadioChange> = new EventEmitter;
-    seasons :any[] = [];
+    reasons :any[] = [];
     commentValue: string;
     @Input() reasonsForm: FormGroup;
 
@@ -19,20 +19,20 @@ export class PassengerReasonsComponent implements OnInit {
     constructor(private rideOptions: RideOptionService,
                 private formBuilder: FormBuilder) { }
 
-  ngOnInit() {
-     this.passengerReason();
-     this.reasonsForm = this.formBuilder.group({
-         comment: ['']
-     })
+    ngOnInit() {
+        this.passengerReason();
+        this.reasonsForm = this.formBuilder.group({
+            comment: ['']
+        })
 
 
-  }
+    }
     passengerReason(){
         this.rideOptions.getPassengerReason().subscribe(
             (data) =>{
                 if(data.data){
-                    this.seasons = data.data;
-                    console.log(this.seasons)
+                    this.reasons = data.data;
+                    console.log(this.reasons)
                     /*0: {iPassengerReasonId: 96, vTitle: "انتخاب مسیر اشتباه", vDesc: ""}
                     1: {iPassengerReasonId: 97, vTitle: "وضعیت نامناسب خودرو", vDesc: ""}
                     2: {iPassengerReasonId: 98, vTitle: "حرف زدن زیاد راننده", vDesc: ""}
@@ -44,11 +44,11 @@ export class PassengerReasonsComponent implements OnInit {
     }
     onClick(index, value) {
         this.radioChange.emit(index)
-        }
+    }
     doSomething(newComment) {
         this.commentValue = this.reasonsForm.get('comment').value;
-        }
+    }
     getComment(){
         return this.commentValue || '';
-     }
     }
+}

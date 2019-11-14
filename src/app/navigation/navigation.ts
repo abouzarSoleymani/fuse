@@ -18,7 +18,7 @@ export const navigation: FuseNavigation[] = [
             }
         ]
     },
-    {
+/*    {
         id      : 'pages',
         title   : 'Pages',
         type    : 'group',
@@ -31,11 +31,11 @@ export const navigation: FuseNavigation[] = [
                 translate: 'NAV.AUTHENTICATION',
                 type    : 'collapsable',
                 icon    : 'lock',
-/*                badge   : {
+/!*                badge   : {
                     title: '10',
                     bg   : '#525e8a',
                     fg   : '#FFFFFF'
-                },*/
+                },*!/
                 children: [
                     {
                         id   : 'login',
@@ -165,5 +165,5 @@ export const navigation: FuseNavigation[] = [
                 url  : '/pages/faq'
             },
         ]
-    }
+    }*/
 ];

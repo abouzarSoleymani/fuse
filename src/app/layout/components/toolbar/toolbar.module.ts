@@ -7,6 +7,7 @@ import { FuseSharedModule } from '@fuse/shared.module';
 
 import { ToolbarComponent } from 'app/layout/components/toolbar/toolbar.component';
 import {SharedModule} from 'app/shared/shared.module';
+import {ToolbarTravelOptionsModule} from 'app/shared/toolbar-travel-options/toolbar-travel-options.module';
 
 @NgModule({
     declarations: [
@@ -22,7 +23,8 @@ import {SharedModule} from 'app/shared/shared.module';
         FuseSharedModule,
         FuseSearchBarModule,
         FuseShortcutsModule,
-        SharedModule
+        SharedModule,
+        ToolbarTravelOptionsModule
     ],
     exports     : [
         ToolbarComponent

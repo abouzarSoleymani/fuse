@@ -18,8 +18,38 @@ export interface FuseConfig
             background: string,
             hidden: boolean,
             position: 'above' | 'above-static' | 'above-fixed' | 'below' | 'below-static' | 'below-fixed'
-        }
+        },
+        toolbarTravelOptions: {
+            customBackgroundColor: false,
+            background           : 'fuse-white-500',
+            hidden               : true,
+            position             : 'above'
+        },
+        bodyWaitingNearDriver: {
+            customBackgroundColor: false,
+            background           : 'fuse-white-500',
+            hidden               : true,
+            position             : 'above'
+        },
+        bodyDriverScore: {
+            customBackgroundColor: false,
+            background           : 'fuse-white-500',
+            hidden               : true,
+            position             : 'above'
+        },
         footer: {
+            customBackgroundColor: boolean,
+            background: string,
+            hidden: boolean,
+            position: 'above' | 'above-static' | 'above-fixed' | 'below' | 'below-static' | 'below-fixed'
+        },
+        footerDriverDetail: {
+            customBackgroundColor: boolean,
+            background: string,
+            hidden: boolean,
+            position: 'above' | 'above-static' | 'above-fixed' | 'below' | 'below-static' | 'below-fixed'
+        },
+        footerDriverOptions: {
             customBackgroundColor: boolean,
             background: string,
             hidden: boolean,

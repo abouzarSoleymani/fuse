@@ -8,9 +8,9 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import {MatAccordion} from '@angular/material';
-import {ResponseApiModel} from 'app/model/responseApi.model';
+import {ResponseApiModel} from 'app/core/model/responseApi.model';
 import {LocalStorageService} from 'app/core/service/local-storage.service';
-import {GeocodingService} from 'app/modules/main/map/geocoding.service';
+import {GeocodingService} from 'app/core/service/geocoding.service';
 
 @Component({
     selector     : 'navbar-vertical-style-1',

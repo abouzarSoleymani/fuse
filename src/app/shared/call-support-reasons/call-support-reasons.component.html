@@ -1,0 +1,11 @@
+<form  dir="rtl" class="passenger-reason-form" [formGroup]="reasonsForm">
+    <radio-group >
+        <radio-button class="example-radio-button" *ngFor="let reason of reasons, let i = index " [value]="i" (click)="onClick(reason)" >
+            {{reason.vText}}
+        </radio-button>
+    </radio-group>
+    <mat-form-field class="passenger-comment">
+		<textarea formControlName="comment" (ngModelChange)="doSomething($event)" matInput placeholder="نظر خود را شرح دهید" matAutosizeMinRows=20 matAutosizeMaxRows=40 >
+  </textarea>
+    </mat-form-field>
+</form>

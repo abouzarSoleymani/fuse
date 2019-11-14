@@ -1,0 +1,11 @@
+@mixin fuse-toolbar-travel-options-theme($theme) {
+
+    $background: map-get($theme, background);
+
+    .fuse-toolbar-travel-options {
+
+        &.expanded {
+            background-color: map-get($background, background);
+        }
+    }
+}

@@ -1,0 +1,28 @@
+<main fxLayout="column" fxLayoutAlign="space-around stretch">
+    <div fxLayout="column" fxLayoutAlign="center center">
+        <mat-card class="score-card" >
+            <mat-card-header class="score-header">
+                <mat-card-title class="h2">امیدوارم که سفر خوبی بوده باشه</mat-card-title>
+                <mat-card-subtitle class="desc">به راننده ما امتیاز دهید . نظر شما همیشه مهم است</mat-card-subtitle>
+            </mat-card-header>
+            <mat-star-rating [rating]="rating"  [starCount]="starCount" [color]="starColor" (ratingUpdated)="onRatingChanged($event)"></mat-star-rating>
+            <mat-card-content>
+                <app-passenger-reasons *ngIf="showPassengerReason" (radioChange)="setPassengerSelectedReason($event)" #passengerReasons></app-passenger-reasons>
+                <app-call-support-reasons *ngIf="showCallReason" (radioChange)="setCallSelectedReason($event)" #callSupportReasons></app-call-support-reasons>
+            </mat-card-content>
+            <mat-card-actions>
+                <div fxLayout="row" fxLayoutAlign="space-between stretch">
+              <button mat-raised-button color="warn" fxLayoutAlign="center center" class="score-card-buttons" (click)="callSupport()"  fxFlex="grow" ><span>تماس با پشتیبانی</span>
+                  <mat-icon  class="mat-icon" aria-hidden="true">phone</mat-icon>
+              </button>
+                <button mat-raised-button color="accent" fxLayoutAlign="center center" (click)="passengerRideFeedback()" fxFlex="grow">ثبت امتیاز<span></span>
+                    <mat-icon  class="mat-icon" aria-hidden="true">done</mat-icon>
+                </button>
+                </div>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</main>
+
+
+

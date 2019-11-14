@@ -1,0 +1,19 @@
+<div class="page-layout simple fullwidth" >
+    <!-- CONTENT -->
+        <div class="content" fusePerfectScrollbar>
+                <div class="map-container">
+                    <img *ngIf="iconImage != ''" class="map-marker-centered" src="{{iconImage}}" (click)="clickNewMarker()">
+                         <div id="map-taxi"
+                             leaflet
+                             *ngIf="isOnBrowser"
+                             [leafletOptions]="options"
+                             (leafletMapReady)="onMapReady($event)"
+                             [leafletLayers]="markers"
+                             [(leafletCenter)]="mapCenter"
+                             [leafletZoomOptions]="mapZoom"
+                            >
+                          </div>
+                 </div>
+        </div>
+
+</div>

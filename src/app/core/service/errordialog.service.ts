@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import Swal from 'sweetalert2';
+declare let L;
 
 @Injectable({
     providedIn: 'root'

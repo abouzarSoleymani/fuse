@@ -1,12 +1,11 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {SwiperComponent, SwiperConfigInterface, SwiperDirective} from 'ngx-swiper-wrapper';
-import {GeocodingService} from 'app/modules/main/map/geocoding.service';
-import {RideOptionService} from 'app/layout/components/footer/rideOption.service';
+import {SwiperConfigInterface, SwiperDirective} from 'ngx-swiper-wrapper';
+import {GeocodingService} from 'app/core/service/geocoding.service';
+import {RideOptionService} from 'app/core/service/rideOption.service';
 import {ErrorDialogService} from 'app/core/service/errordialog.service';
-import Swal from "sweetalert2";
 import {LocalStorageService} from 'app/core/service/local-storage.service';
-import {FormControl, Validators} from '@angular/forms';
 import {FuseConfigService} from '@fuse/services/config.service';
+import {MarkersChangeService} from 'app/core/service/markersChange.service';
 
 @Component({
     selector   : 'footer',
@@ -68,7 +67,8 @@ export class FooterComponent implements OnInit
                 private rideOptionService: RideOptionService,
                 private errorDialog: ErrorDialogService,
                 private localStorage: LocalStorageService,
-                private _fuseConfigService: FuseConfigService)
+                private _fuseConfigService: FuseConfigService,
+                private markerChangesService: MarkersChangeService)
     {
     }
 
@@ -76,7 +76,7 @@ export class FooterComponent implements OnInit
 
 
 
-            this.geocoder.allVehiclesAvalible.subscribe(
+            this.markerChangesService.allVehiclesAvalible.subscribe(
                 (data: any) => {
                         this.vehicles = data;
                         if(this.vehicles.length > 0)
@@ -141,7 +141,7 @@ export class FooterComponent implements OnInit
     }
     setRoundTrip(){
         this.roundTrip = !this.roundTrip;
-        this.localStorage.updateItem('ride', {vSweep: this.roundTrip ? '1' : '0'})
+        this.localStorage.updateItem('ride', {vSweep: this.roundTrip})
         this.rideOptionService.getPassengerEstimateFare();
     }
     setWaiting(){

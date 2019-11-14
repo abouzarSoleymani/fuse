@@ -7,7 +7,7 @@ import {FuseConfigService} from '@fuse/services/config.service';
 import {fuseAnimations} from '@fuse/animations';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ShareDataService} from 'app/core/service/share.data.service';
-import {ResponseApiModel} from 'app/model/responseApi.model';
+import {ResponseApiModel} from 'app/core/model/responseApi.model';
 import {AuthService} from 'app/modules/authentication/auth.service';
 import Swal from 'sweetalert2';
 

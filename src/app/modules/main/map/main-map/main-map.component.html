@@ -1,0 +1,79 @@
+<div id="main">
+    <div id="container-1" class="container">
+        <div fxFlex fxLayout="column">
+            <!-- TOOLBARTravelOptions: Above -->
+            <ng-container *ngIf="fuseConfig.layout.toolbarTravelOptions.position === 'above'">
+                <ng-container *ngTemplateOutlet="toolbarTravelOptions"></ng-container>
+            </ng-container>
+            <!-- / TOOLBARTravelOptions: Above -->
+
+            <!-- bodyWaitingNearDriver: Above -->
+            <ng-container *ngIf="fuseConfig.layout.bodyWaitingNearDriver.position === 'above'">
+                <ng-container *ngTemplateOutlet="bodyWaitingNearDriver"></ng-container>
+            </ng-container>
+            <!-- / bodyWaitingNearDriver: Above -->
+
+            <!-- bodyDriverScore: Above -->
+            <ng-container *ngIf="fuseConfig.layout.bodyDriverScore.position === 'above'">
+                <ng-container *ngTemplateOutlet="bodyDriverScore"></ng-container>
+            </ng-container>
+            <!-- / bodyDriverScore: Above -->
+
+                    <content></content>
+
+            <!-- footerDriverDetail: Above -->
+            <ng-container *ngIf="fuseConfig.layout.footerDriverDetail.position === 'below-fixed'">
+                <ng-container *ngTemplateOutlet="footerDriverDetail"></ng-container>
+            </ng-container>
+            <!-- footerDriverDetail: Above -->
+
+            <!-- FOOTERDriverOptions: Above -->
+            <ng-container *ngIf="fuseConfig.layout.footerDriverOptions.position === 'below-fixed'">
+                <ng-container *ngTemplateOutlet="footerDriverOptions"></ng-container>
+            </ng-container>
+            <!-- FOOTER: Above -->
+        </div>
+    </div>
+</div>
+
+<!-- TOOLBARTravelOptions -->
+<ng-template #toolbarTravelOptions>
+    <toolbar-travel-options  *ngIf="!fuseConfig.layout.toolbarTravelOptions.hidden"
+                            [ngClass]="fuseConfig.layout.toolbarTravelOptions.customBackgroundColor === true ? fuseConfig.layout.toolbarTravelOptions.position + ' ' + fuseConfig.layout.toolbarTravelOptions.background : fuseConfig.layout.toolbarTravelOptions.position">
+    </toolbar-travel-options>
+</ng-template>
+<!-- / TOOLBARTravelOptions -->
+
+<!-- bodyWaitingNearDriver -->
+<ng-template #bodyWaitingNearDriver>
+    <body-waiting-near-driver  *ngIf="!fuseConfig.layout.bodyWaitingNearDriver.hidden"
+                            [ngClass]="fuseConfig.layout.bodyWaitingNearDriver.customBackgroundColor === true ? fuseConfig.layout.bodyWaitingNearDriver.position + ' ' + fuseConfig.layout.bodyWaitingNearDriver.background : fuseConfig.layout.bodyWaitingNearDriver.position">
+    </body-waiting-near-driver>
+</ng-template>
+<!-- / bodyWaitingNearDriver -->
+
+<!-- bodyWaitingNearDriver -->
+<ng-template #bodyDriverScore>
+    <body-driver-score  *ngIf="!fuseConfig.layout.bodyDriverScore.hidden"
+                               [ngClass]="fuseConfig.layout.bodyDriverScore.customBackgroundColor === true ? fuseConfig.layout.bodyDriverScore.position + ' ' + fuseConfig.layout.bodyDriverScore.background : fuseConfig.layout.bodyDriverScore.position">
+    </body-driver-score>
+</ng-template>
+<!-- / bodyWaitingNearDriver -->
+
+
+<!-- footerDriverDetail -->
+<ng-template #footerDriverDetail>
+    <footer-driver-detail *ngIf="!fuseConfig.layout.footerDriverDetail.hidden"
+                           [ngClass]="fuseConfig.layout.footerDriverDetail.customBackgroundColor === true ? fuseConfig.layout.footerDriverDetail.position + ' ' + fuseConfig.layout.footerDriverDetail.background : fuseConfig.layout.footerDriverDetail.position">
+    </footer-driver-detail>
+</ng-template>
+<!-- / footerDriverDetail -->
+
+<!-- FOOTERDriverOptions -->
+<ng-template #footerDriverOptions>
+    <footer-driver-options *ngIf="!fuseConfig.layout.footerDriverOptions.hidden"
+                           [ngClass]="fuseConfig.layout.footerDriverOptions.customBackgroundColor === true ? fuseConfig.layout.footerDriverOptions.position + ' ' + fuseConfig.layout.footerDriverOptions.background : fuseConfig.layout.footerDriverOptions.position">
+    </footer-driver-options>
+</ng-template>
+<!-- / footerDriverOption -->
+

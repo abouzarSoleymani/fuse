@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>{{description}}</h2>
+<mat-dialog-content [formGroup]="voucherForm" dir="rtl">
+    <div fxLayout="row" fxFill>
+        <mat-form-field appearance="outline"  fxFlex="98">
+            <mat-label>کد تخفیف</mat-label>
+            <input matInput formControlName="voucher"  >
+            <mat-icon matSuffix class="secondary-text">monetization_on</mat-icon>
+        </mat-form-field>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button class="mat-raised-button" (click)="close()">انصراف</button>
+    <button class="mat-raised-button mat-primary" (click)="save()">ثبت</button>
+</mat-dialog-actions>

@@ -6,7 +6,6 @@ import { FuseSharedModule } from '@fuse/shared.module';
 
 import { FooterComponent } from 'app/layout/components/footer/footer.component';
 import {SharedModule} from 'app/shared/shared.module';
-import {DriverDetailComponent} from 'app/modules/main/map/driver-detail/driver-detail.component';
 
 @NgModule({
     declarations: [
@@ -15,7 +14,7 @@ import {DriverDetailComponent} from 'app/modules/main/map/driver-detail/driver-d
     imports     : [
         RouterModule,
         FuseSharedModule,
-        SharedModule
+        SharedModule,
     ],
     exports     : [
         FooterComponent,

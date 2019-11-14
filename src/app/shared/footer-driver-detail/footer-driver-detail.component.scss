@@ -1,0 +1,59 @@
+
+:host {
+    display: flex;
+    flex: 0 0 auto;
+    z-index: 3;
+    background-color: white;
+    .mat-toolbar {
+        background: inherit;
+        color: inherit;
+        box-shadow: 0px -1px 1px -1px rgba(0, 0, 0, 0.2), 0px 0px 1px 0px rgba(0, 0, 0, 0.14), 0px -1px 3px 0px rgba(0, 0, 0, 0.12);
+    }
+    .mat-toolbar-single-row{
+        padding: 0px;
+    }
+    &.above {
+        position: relative;
+        z-index: 99;
+    }
+}
+
+.request-center-btn{
+    color:#0E2A3B;
+  //  position: relative;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.driver-ride-options{
+    height: auto;
+    font-size: 1.1em;
+    padding: 0.5em;
+    //border: solid 1px #cccccc;
+    .driver-ride-detail{
+        border-left: solid 1px #5c5c5c;
+    }
+}
+.title{
+    font-weight: bold;
+    font-size: 0.9em;
+    color:#0E2A3B;
+}
+.white{
+    background-color: #ffffff;
+}
+.driver-detail-top-price span{
+    font-size: 1em;
+}
+.driver-ride-options{
+    padding: 0.3em;
+}
+.footer-travel-options{
+    height: 36px;
+    .option-btn{
+        color:#0E2A3B;
+        //  position: relative;
+        font-size: 1em;
+        font-weight: bold;
+    }
+}

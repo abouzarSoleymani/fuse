@@ -66,7 +66,7 @@ export class MapComponent implements OnInit{
     options = {
         noMoveStart: true,
         layers: [
-            tileLayer('https://api.cedarmaps.com/v1/tiles/cedarmaps.streets/{z}/{x}/{y}.png?access_token=d058bfc14a9d1305de1dbabd7161f67cd2f37933'),
+            tileLayer('https://api.cedarmaps.com/v1/tiles/cedarmaps.streets/{z}/{x}/{y}.png?access_token=******'),
         ],
         zoom: 14,
         center: latLng(35.710106, 51.396511)
